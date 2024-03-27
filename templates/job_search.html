@@ -1,0 +1,31 @@
+{% extends '_layout.html' %}
+
+{% block title %}Job Search{% endblock %}
+
+{% block body %}
+<h1 class="text-3xl font-bold">Job Openings</h1>
+
+<input type="text" placeholder="Search Jobs..." class="p-2 border border-gray-300 rounded-lg mt-4">
+
+<div class="mt-4">
+  <input type="text" placeholder="Location" class="p-2 border border-gray-300 rounded-lg">
+  <input type="text" placeholder="Department" class="p-2 border border-gray-300 rounded-lg ml-2">
+  <input type="text" placeholder="Work Type" class="p-2 border border-gray-300 rounded-lg ml-2">
+</div>
+
+<div class="mt-8 border border-gray-300 rounded-lg p-4">
+  <div class="flex justify-between">
+    <div>
+      <h2 class="text-xl font-semibold">Product Manager</h2>
+      <p class="text-gray-500">Posted 20 days ago</p>
+    </div>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">View</button>
+  </div>
+  <div class="mt-4">
+    <p>Location: Anywhere, USA</p>
+    <p>Department: Business Management</p>
+    <p>Work Type: Full-Time</p>
+  </div>
+</div>
+
+{% endblock %}
