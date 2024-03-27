@@ -21,26 +21,28 @@
     <img src="../static/Screenshot 2024-03-25 204720.jpg" alt="The Water Cooler Logo" class="h-32" style="width: 8%;" />
 </div>
 
-<!-- Slogan Splash -->
-<h1 class="text-3xl font-semibold text-center mt-8">Connecting Just The Right People</h1>
+<!-- Slogan -->
+<div class="text-center">
+    <h1 class="text-3xl font-semibold mt-8">Connecting Just The Right People</h1>
+</div>
 
 <!-- input fields / buttons -->
-<div>
-    <input type="text" name="input_subject" placeholder="What are you looking for...?">
-</div>
-<div>
-    <input type="text" name="input_location" placeholder="Where are you looking...?">
-</div>
-
-<div>
-    <button>Search Postings</button>
-    <button>Search People</button>
+<div class="flex justify-center">
+    <div class="text-center">
+        <input type="text" name="input_subject" placeholder="What are you looking for...?" class="mb-4">
+    </div>
+    <div class="text-center">
+        <input type="text" name="input_location" placeholder="Where are you looking...?" class="mb-4">
+    </div>
 </div>
 
-
-<div>
-    <button>Search Reviews</button>
-    <button>Search Salaries</button>
+<div class="flex justify-center">
+    <div class="grid grid-cols-2 gap-4">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search Postings</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search People</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search Reviews</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search Salaries</button>
+    </div>
 </div>
 
 
