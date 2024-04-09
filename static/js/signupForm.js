@@ -7,45 +7,45 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectedValue === "user")
         {
             formRender.innerHTML = 
-            '<div class="mt-2 mb-2">' +
-            '<label for="profileID">Create a unique profile id (16 char limit):</label>' +
-            '<textarea class="form-control" id="profileID" name="profileID" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="email">Account email:</label>' +
-            '<textarea class="form-control" id="email" name="email" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="passwordArea">Create a unique password:</label>' +
-            '<textarea class="form-control" id="passwordArea" name="password" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="firstname">Enter your firstname:</label>' +
-            '<textarea class="form-control" id="firstname" name="firstname" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="lastname">Enter your lastname:</label>' +
-            '<textarea class="form-control" id="lastname" name="lastname" rows="1" required></textarea>' +
-            '</div>';
+            `<div class="mt-2 mb-2">
+            <label for="profileID">Create a unique profile id (16 char limit):</label>
+            <input type="text" class="form-control" id="profileID" name="profileID" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="email">Account email:</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="passwordArea">Create a unique password:</label>
+            <input type="password" class="form-control" id="passwordArea" name="password" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="firstname">Enter your firstname:</label>
+            <input type="text" class="form-control" id="firstname" name="firstname" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="lastname">Enter your lastname:</label>
+            <input type="text" class="form-control" id="lastname" name="lastname" required>
+            </div>`;
             submitButton.style.display="block";
         } else if (selectedValue === "company") {
             formRender.innerHTML = 
-            '<div class="mt-2 mb-2">' +
-            '<label for="companyID">Create a unique company id (16 char limit):</label>' +
-            '<textarea class="form-control" id="companyID" name="companyID" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="companyLogin">Create a username or email to manage your business:</label>' +
-            '<textarea class="form-control" id="companyLogin" name="companyLogin" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="passwordArea">Create a unique password:</label>' +
-            '<textarea class="form-control" id="passwordArea" name="password" rows="1" required></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="companyName">Enter your firstname:</label>' +
-            '<textarea class="form-control" id="companyName" name="companyName" rows="1" required></textarea>' +
-            '</div>'
+            `<div class="mt-2 mb-2">
+            <label for="companyID">Create a unique company id (16 char limit):</label>
+            <input type="text" class="form-control" id="companyID" name="companyID" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="companyLogin">Create a username or email to manage your business:</label>
+            <input type="text" class="form-control" id="companyLogin" name="companyLogin" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="passwordArea">Create a unique password:</label>
+            <input type="password" class="form-control" id="passwordArea" name="password" required>
+            </div>
+            <div class="mt-2 mb-2">
+            <label for="companyName">Enter your firstname:</label>
+            <input type="text" class="form-control" id="companyName" name="companyName" required>
+            </div>`;
             submitButton.style.display="block";
         } else {
             formRender.innerHTML = '';
@@ -141,23 +141,23 @@ function signup(event) {
                 profileType = 'company'
             }
             extrasContainer.innerHTML =
-            '<div id="extrasData" data-extras-id=' + id + ' data-extras-profileType=' + profileType + '></div>' +
-            '<div class="mt-2 mb-2">' +
-                '<label for="profileBio">Enter a profile bio (Optional)</label>' +
-                '<textarea class="form-control" id="profileBio" name="newBio" rows="1"></textarea>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="profileUpload">Upload profile picture, best fit will be 1:1 aspect ratio (square) (Optional)</label>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-                '<input type="file" class="form-control-file" id="profileUpload" name="newProfile">' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-            '<label for="bannerUpload">Upload profile banner, best fit will be 3:1 aspect ratio (Optional)</label>' +
-            '</div>' +
-            '<div class="mt-2 mb-2">' +
-                '<input type="file" class="form-control-file" id="bannerUpload" name="newBanner">' +
-            '</div>'
+            `<div id="extrasData" data-extras-id=${id} data-extras-profileType=${profileType}></div>
+            <div class="mt-2 mb-2">
+                <label for="profileBio">Enter a profile bio (Optional)</label>
+                <textarea class="form-control" id="profileBio" name="newBio" rows="1"></textarea>
+            </div>
+            <div class="mt-2 mb-2">
+                <label for="profileUpload">Upload profile picture, best fit will be 1:1 aspect ratio (square) (Optional)</label>
+            </div>
+            <div class="mt-2 mb-2">
+                <input type="file" class="form-control-file" id="profileUpload" name="newProfile" accept="image/*">
+            </div>
+            <div class="mt-2 mb-2">
+                <label for="bannerUpload">Upload profile banner, best fit will be 3:1 aspect ratio (Optional)</label>
+            </div>
+            <div class="mt-2 mb-2">
+                <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
+            </div>`;
         },
         error: function(error) {
             console.error('Error tracking analytics event:', error);
