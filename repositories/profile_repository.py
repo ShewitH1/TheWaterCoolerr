@@ -55,6 +55,7 @@ def get_user_profile_by_id(user_id):
     finally:
         if conn is not None:
             pool.putconn(conn)
+
 # Company Profile Get Methods
 
 def get_company_by_login(company_login):
@@ -107,6 +108,7 @@ def create_new_user_profile(profile_id, email, password, fname, lname):
 
 
 #def create_new_company_profile(company_id, login, password, cname):
+
 def create_new_company_profile(company_id, company_login, password, company_name):
     if company_id is None or company_login is None or password is None or company_name is None:
         return None
@@ -128,6 +130,124 @@ def create_new_company_profile(company_id, company_login, password, company_name
         if conn is not None:
             pool.putconn(conn)
 
+# Update Methods
+
+def update_profile_bio(profile_type=None, profile_id=None, profile_bio=None):
+    if profile_type is None or profile_id is None:
+        return None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                if (check_id_pair_exists(profile_type, profile_id, conn)):
+                    if profile_type == 'user':
+                        cursor.execute('''
+                                        UPDATE
+                                            user_account
+                                        SET
+                                            profile_bio = %s
+                                        WHERE
+                                            profile_id = %s
+                                        ''', (profile_bio, profile_id))
+                        conn.commit()
+                    elif profile_type == 'company':
+                        cursor.execute('''
+                                        UPDATE
+                                            company_account
+                                        SET
+                                            company_bio = %s
+                                        WHERE
+                                            company_id = %s
+                                        ''', (profile_bio, profile_id))
+                        conn.commit()
+                    else:
+                        return None
+                else:
+                    return None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
+
+def update_profile_image(profile_type=None, profile_id=None, profile_picture=None):
+    if profile_type is None or profile_id is None:
+        return None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                if (check_id_pair_exists(profile_type, profile_id, conn)):
+                    if profile_type == 'user':
+                        cursor.execute('''
+                                        UPDATE
+                                            user_account
+                                        SET
+                                            profile_image = %s
+                                        WHERE
+                                            profile_id = %s
+                                        ''', (profile_picture, profile_id))
+                        conn.commit()
+                    elif profile_type == 'company':
+                        cursor.execute('''
+                                        UPDATE
+                                            company_account
+                                        SET
+                                            company_image = %s
+                                        WHERE
+                                            company_id = %s
+                                        ''', (profile_picture, profile_id))
+                        conn.commit()
+                    else:
+                        return None
+                else:
+                    return None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
+
+def update_profile_banner(profile_type=None, profile_id=None, profile_banner=None):
+    if profile_type is None or profile_id is None:
+        return None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                if (check_id_pair_exists(profile_type, profile_id, conn)):
+                    if profile_type == 'user':
+                        cursor.execute('''
+                                        UPDATE
+                                            user_account
+                                        SET
+                                            profile_banner = %s
+                                        WHERE
+                                            profile_id = %s
+                                        ''', (profile_banner, profile_id))
+                        conn.commit()
+                    elif profile_type == 'company':
+                        cursor.execute('''
+                                        UPDATE
+                                            company_account
+                                        SET
+                                            company_banner = %s
+                                        WHERE
+                                            company_id = %s
+                                        ''', (profile_banner, profile_id))
+                        conn.commit()
+                    else:
+                        return None
+                else:
+                    return None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
 # Logic Methods
 
 def check_user_id_taken(new_id):
@@ -204,3 +324,39 @@ def check_company_id_taken(new_id):
     finally:
         if conn is not None:
             pool.putconn(conn)
+
+def check_id_pair_exists(profile_type=None, profile_id=None, conn=None):
+    try:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            if profile_type == 'user':
+                cursor.execute('''
+                                SELECT
+                                    COUNT(*)
+                                FROM
+                                    user_account
+                                WHERE profile_id = %s
+                                ''', [profile_id])
+                count = cursor.fetchone()['count']
+                if count > 0:
+                    return True
+                else:
+                    return False
+            elif profile_type == 'company':
+                cursor.execute('''
+                                SELECT
+                                    COUNT(*)
+                                FROM
+                                    company_account
+                                WHERE company_id = %s
+                                ''', [profile_id])
+                count = cursor.fetchone()['count']
+                if count > 0:
+                    return True
+                else:
+                    return False
+            else:
+                return False
+    except Exception as e:
+        print(e)
+        return False
+

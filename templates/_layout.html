@@ -27,13 +27,19 @@
           <div class="nav justify-content-end px-5 ml-auto">
             <!-- Elements aligned to the right -->
             <ul class="navbar-nav">
-              {% if user %}
-              <li class="nav-item">
-                <a class="nav-link">Welcome back, {{ name }}</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/profile?profileType={{ userType }}&id={{ userID }}">Profile</a>
-              </li>
+              {% if sessionProfile %}
+                {% if sessionProfile['firstname'] %}
+                <li class="nav-item">
+                  <a class="nav-link">Welcome back, {{ sessionProfile['firstname'] }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/profile?profileType=user&id={{ sessionProfile['profile_id'] }}">Profile</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                  <a class="nav-link" href="/profile?profileType=company&id={{ sessionProfile['company_id'] }}">Company Profile</a>
+                </li>
+                {% endif %}
               <li class="nav-item">
                 <a class="nav-link" href="/logout">Logout</a>
               </li>

@@ -11,3 +11,8 @@ border-style: inset;
 border-width: 2px;
 border-color: black;
 }
+
+.header-text-name-container {
+    padding-left: 50px;
+    padding-top: 80px;
+}
