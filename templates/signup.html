@@ -1,0 +1,18 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<script src="{{ url_for('static', filename='js/signupForm.js') }}"></script>
+<form id="signupForm" class="w-50" action="/signup" method="post">
+    <div class="mt-2 mb-2">
+        <label for="profileType">Create an Individual or Company Profile?</label>
+        <select class="form-select" id="profileType" name="profileType" required>
+            <option selected>Select a Profile Type</option>
+            <option value="user">Individual</option>
+            <option value="company">Company</option>
+        </select>
+    </div>
+    <div id="signupInfo">
+    </div>
+    <button type="submit" style="display: none" id="submitButton" class="btn btn-dark mt-2 mb-2">Login</button>
+</form>
+{% endblock %}
