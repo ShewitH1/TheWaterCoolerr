@@ -28,15 +28,15 @@ CREATE TABLE IF NOT EXISTS workplace_experience (
     company_id VARCHAR(16) NOT NULL,
     job_title VARCHAR(64) NOT NULL,
     company_name VARCHAR(64) NOT NULL,
-    job_sector VARCHAR(64) NOT NULL
+    job_sector VARCHAR(64) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     description TEXT,
     watercooler BOOLEAN,
     public BOOLEAN,
-    PRIMARY KEY (profile_id, company_id, job_title, start_date)
-    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON CASCADE UPDATE ON DELETE UPDATE,
-    FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON CASCADE UPDATE ON DELETE UPDATE
+    PRIMARY KEY (profile_id, company_id, job_title, start_date),
+    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 DROP TYPE IF EXISTS education_level;
@@ -48,9 +48,9 @@ CREATE TABLE IF NOT EXISTS education_experience (
     education_level education_level NOT NULL,
     study_area VARCHAR(64) NOT NULL,
     start_date DATE NOT NULL,
-    end_date DATE NOT NULL
-    PRIMARY KEY (profile_id, institution_name, education_level, start_date)
-    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON CASCADE UPDATE ON DELETE UPDATE
+    end_date DATE NOT NULL,
+    PRIMARY KEY (profile_id, institution_name, education_level, start_date),
+    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS job_posting (
@@ -59,8 +59,8 @@ CREATE TABLE IF NOT EXISTS job_posting (
     job_title VARCHAR(64) NOT NULL,
     description TEXT NOT NULL,
     salary FLOAT NOT NULL,
-    PRIMARY KEY (posting_id, company_id)
-    FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON CASCADE UPDATE ON DELETE
+    PRIMARY KEY (posting_id, company_id),
+    FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON UPDATE CASCADE ON DELETE CASCADE
 )
 
 CREATE TABLE IF NOT EXISTS posting_tags (

@@ -5,8 +5,8 @@ import json
 
 # User Profile Get Methods
 
-def get_user_by_id(user_id):
-    if user_id is None:
+def get_user_by_login(login):
+    if login is None:
         return False
     pool = get_pool()
     try:
@@ -14,12 +14,14 @@ def get_user_by_id(user_id):
             with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute('''
                                 SELECT
-                                    *
+                                    email,
+                                    pass AS hashed_password,
+                                    firstname
                                 FROM
                                     user_account
-                                WHERE profile_id = %s
-                                ''', [user_id])
-                return cursor.fetchall()
+                                WHERE email = %s
+                                ''', [login])
+                return cursor.fetchone()
     except Exception as e:
         print(e)
         return False
@@ -29,8 +31,8 @@ def get_user_by_id(user_id):
 
 # Company Profile Get Methods
 
-def get_company_by_id(company_id):
-    if company_id is None:
+def get_company_by_login(company_login):
+    if company_login is None:
         return False
     pool = get_pool()
     try:
@@ -38,12 +40,13 @@ def get_company_by_id(company_id):
             with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute('''
                                 SELECT
-                                    *
+                                    login,
+                                    pass AS hashed_password
                                 FROM
                                     company_account
-                                WHERE company_id = %s
-                                ''', [company_id])
-                return cursor.fetchall()
+                                WHERE login = %s
+                                ''', [company_login])
+                return cursor.fetchone()
     except Exception as e:
         print(e)
         return False
@@ -76,6 +79,26 @@ def create_new_user_profile(profile_id, email, password, fname, lname):
 
 
 #def create_new_company_profile(company_id, login, password, cname):
+def create_new_company_profile(company_id, company_login, password, company_name):
+    if company_id is None or company_login is None or password is None or company_name is None:
+        return None
+    pool = get_pool()
+    if check_company_id_taken(company_id):
+        return None
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                INSERT INTO company_account(company_id, login, pass, name)
+                                VALUES (%s, %s, %s, %s)
+                                ''', (company_id, company_login, password, company_name))
+                conn.commit()
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
 
 # Logic Methods
 
@@ -120,6 +143,31 @@ def check_user_email_taken(new_email):
                                 ''', [new_email])
                 email = cursor.fetchone()
                 if email is None:
+                    return False
+                return True
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
+
+def check_company_id_taken(new_id):
+    if new_id is None:
+        return None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                SELECT
+                                    company_id
+                                FROM
+                                    company_account
+                                WHERE company_id = %s
+                                ''', [new_id])
+                profile_id = cursor.fetchone()
+                if profile_id is None:
                     return False
                 return True
     except Exception as e:

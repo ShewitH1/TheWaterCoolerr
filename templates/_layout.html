@@ -21,7 +21,7 @@
             </a>
             <ul class="navbar-nav">
               <li class="navbar.item">
-                <a class="nav-link" href="#"">Browse Listings</a>
+                <a class="nav-link" href="/"">Browse Listings</a>
               </li>
             </ul>
           </div>
@@ -31,11 +31,17 @@
             <!-- Elements aligned to the right -->
             <ul class="navbar-nav">
               {% if user %}
-
-              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link">Welcome back, {{ name }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              {% else %}
               <li class="nav-item">
                 <a class="nav-link" href="/login">Login</a>
               </li>
+              {% endif %}
             </ul>
           </div>
         </div>
