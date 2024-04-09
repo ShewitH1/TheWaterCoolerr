@@ -1,0 +1,18 @@
+.image-container {
+position: relative;
+}
+.overlay-image {
+position: absolute;
+top: 85px;
+left: 45px;
+width: 165px;
+height: 165px;
+border-style: inset;
+border-width: 2px;
+border-color: black;
+}
+
+.header-text-name-container {
+    padding-left: 50px;
+    padding-top: 80px;
+}

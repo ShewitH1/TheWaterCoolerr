@@ -1,0 +1,26 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
+<link href="{{ url_for('static', filename='css/profile.css')}}" rel="stylesheet">
+<div class="container-fluid bg-secondary p-4" style="height: 100%;">
+    <div class="container-fluid bg-dark p-1 rounded mb-4" style="width: 1200px; height: 400px">
+        <!-- Content goes here -->
+        {% if image %}
+
+        {% else %}
+        <div class="image-container">
+            <img width=100% height=175 src="{{ url_for('static', filename='img/site/profile/default-banner.png') }}" alt="Image 1">
+            <img src="{{ url_for('static', filename='img/site/profile/default-profile.png') }}" alt="Image 2" class="img-fluid overlay-image rounded">
+        </div>
+        {% endif %}
+        <div class="header-text-name-container">
+            <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed';">{{profile['firstname']}} {{profile['lastname']}}</h1>
+            <h3 class="text-light" style="font-family: 'IBM Plex Sans Condensed';">{{profile['profile_bio']}}</h3>
+        </div>
+    </div>
+    <div class="container-fluid bg-dark p-1 rounded" style="width: 1200px; height: 900px"">
+        
+    </div>
+</div>
+{% endblock %}
