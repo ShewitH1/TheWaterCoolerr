@@ -1,0 +1,27 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<link href="{{ url_for('static', filename='css/profile.css')}}" rel="stylesheet">
+<div class="container-fluid bg-secondary p-4" style="height: 100%;">
+    <div class="container-fluid bg-dark p-1 rounded mb-4" style="width: 65%; height: 400px">
+        <!-- Content goes here -->
+        {% if image %}
+
+        {% else %}
+        <div class="image-container">
+            <img width=100% height=175 src="{{ url_for('static', filename='img/site/profile/default-banner.png') }}" alt="Image 1">
+            <img src="{{ url_for('static', filename='img/site/profile/default-profile.png') }}" alt="Image 2" class="img-fluid overlay-image rounded">
+        </div>
+        {% endif %}
+    </div>
+    <div class="container-fluid bg-dark p-1 rounded" style="width: 65%; height: 900px">
+        <!-- Content goes here -->
+        <h2 class="text-center">Centered Container with Background</h2>
+        <p class="text-center">This container is centered in the middle of the page with about 60% width. You can place other HTML elements within it.</p>
+        <!-- Example button -->
+        <div class="text-center">
+            <button class="btn btn-primary">Example Button</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

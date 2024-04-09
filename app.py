@@ -13,17 +13,20 @@ bcrypt = Bcrypt(app)
 app.secret_key = b'd8585dc38f97d4df573395d28ec223123af2fc139ec8183a0d1c2954ef7f2b51'
 
 @app.route('/')
-@app.route('/index')
 def index():
     name = None
     user = None
+    profileType = None
+    profileID = None
     if 'user' in session:
         user = session['user']
         name = session['firstname']
+        profileType = session['type']
+        profileID = session['id']
         session['next'] = request.url
     else:
         session['next'] = request.url
-    return render_template('index.html', user=user, name=name)
+    return render_template('index.html', user=user, name=name, userType=profileType, userID=profileID)
 
 
 # Login & Account Creation
@@ -42,6 +45,8 @@ def login():
             
             session['user'] = username
             session['firstname'] = account_record['firstname']
+            session['id'] = account_record['profile_id']
+            session['type'] = 'user'
             session['password'] = password
             if session['next'] is not None:
                 return redirect(session['next'])
@@ -91,7 +96,21 @@ def logout():
         return redirect(redirect_link)
     else:
         return redirect('/')
-    
+
+@app.route('/profile', methods=['GET'])
+def profile():
+    profileType = request.args.get('profileType')
+    print(profileType)
+    profileId = request.args.get('id')
+    print(profileId)
+    if profileType == 'user':
+        profile = profile_repository.get_user_profile_by_id(profileId)
+        print(profile)
+        return render_template('user_profile.html', profile=profile)
+    elif profileType == 'company':
+        profile = profile_repository.get_company_profile_by_id(profileId)
+    else:
+        abort(400)
 @app.post('/signupUser')
 def signupUser():
     print('none')

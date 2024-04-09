@@ -16,7 +16,8 @@ def get_user_by_login(login):
                                 SELECT
                                     email,
                                     pass AS hashed_password,
-                                    firstname
+                                    firstname,
+                                    profile_id
                                 FROM
                                     user_account
                                 WHERE email = %s
@@ -29,6 +30,31 @@ def get_user_by_login(login):
         if conn is not None:
             pool.putconn(conn)
 
+def get_user_profile_by_id(user_id):
+    if user_id is None:
+        return False
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                SELECT
+                                    firstname,
+                                    lastname,
+                                    profile_image,
+                                    profile_banner,
+                                    profile_bio
+                                FROM
+                                    user_account
+                                WHERE profile_id = %s
+                                ''', [user_id])
+                return cursor.fetchone()
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
 # Company Profile Get Methods
 
 def get_company_by_login(company_login):
@@ -53,6 +79,8 @@ def get_company_by_login(company_login):
     finally:
         if conn is not None:
             pool.putconn(conn)
+
+#def get_company_profile_by_id(company_id):
 
 # Creation Methods
 
