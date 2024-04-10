@@ -2,7 +2,7 @@ from flask import Flask, abort, redirect, render_template, request, session, jso
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
-from repositories import profile_repository
+from repositories import profile_repository, job_repository
 
 load_dotenv()
 
@@ -157,3 +157,8 @@ def profile():
 @app.post('/signupUser')
 def signupUser():
     print('none')
+
+@app.get('/job_search.html')
+def job_search():
+    all_jobs = job_repository.get_job_posting_by_id()
+    return render_template('job_search.html')
