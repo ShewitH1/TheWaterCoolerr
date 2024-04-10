@@ -80,14 +80,3 @@ VALUES ('3', 'hire', 'xyz', 'Boston Consoling Group', 'group_hug', 'therapy offi
 INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
 VALUES ('4', 'live', 'wire', 'School of Hard Rock', 'concert', 'guitar hero 3', 'We are here to rock!', true);
 
-INSERT INTO job_posting (posting_id, company_id, job_title, description, salary, posting_date)
-VALUES ('1', '1', 'Software Engineer', 'Hate yourself? Apply', 99999, CURRENT_TIMESTAMP);
-
-INSERT INTO job_posting (posting_id, company_id, job_title, description, salary, posting_date)
-VALUES ('2', '2', 'Sound Manager', 'Need someone who can handle sound equipment', 30000, CURRENT_TIMESTAMP);
-
-INSERT INTO job_posting (posting_id, company_id, job_title, description, salary, posting_date)
-VALUES ('3', '3', 'Consoltant', 'Therapist position open', 110000, CURRENT_TIMESTAMP);
-
-INSERT INTO job_posting (posting_id, company_id, job_title, description, salary, posting_date)
-VALUES ('4', '4', 'Music Teacher', 'Position open for teaching music', 55000, CURRENT_TIMESTAMP);
