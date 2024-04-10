@@ -160,5 +160,5 @@ def signupUser():
 
 @app.get('/job_search.html')
 def job_search():
-    all_jobs = job_repository.get_job_posting_by_id()
-    return render_template('job_search.html')
+    all_jobs = job_repository.get_job_posting_for_table(posting_id)
+    return render_template('job_search.html', job_posting=all_jobs)
