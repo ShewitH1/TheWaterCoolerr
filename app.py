@@ -165,3 +165,8 @@ def job_search():
     if not all_jobs:
         all_jobs = []
     return render_template('job_search.html', job_posting=all_jobs)
+
+
+@app.get('/job_listing.html')
+def job_listing():
+    return render_template('job_listing.html')
