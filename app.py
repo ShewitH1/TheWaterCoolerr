@@ -162,4 +162,6 @@ def signupUser():
 def job_search():
     posting_id = request.args.get('posting_id')
     all_jobs = job_repository.get_job_posting_for_table(posting_id)
+    if not all_jobs:
+        all_jobs = []
     return render_template('job_search.html', job_posting=all_jobs)
