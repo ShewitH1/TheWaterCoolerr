@@ -3,7 +3,49 @@
 {% block title %}Job Listing page{% endblock %}
 
 {% block body %}
-<h2 class="text-3xl">
-    Job listing page for potential candidates'
-</h2>
+<div class="container mx-auto py-8">
+        <div class="bg-gray-200 rounded-lg overflow-hidden shadow-md moving-container">
+            <div class="p-6">
+                <h2 class="text-3xl font-bold mb-4">Job Title</h2>
+                <p class="text-lg mb-4">Location: City, Country</p>
+                <p class="text-lg mb-4">Company: Company Name</p>
+                <p class="text-lg mb-4">Posted Date: January 1, 2024</p>
+            </div>
+    
+            <div class="border-t border-gray-300"></div>
+    
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">Job Description</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam at nunc sed quam porttitor vestibulum.</p>
+            </div>
+    
+            <div class="border-t border-gray-300"></div>
+    
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">Responsibilities</h3>
+                <ul class="list-disc ml-6">
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Consectetur adipiscing elit</li>
+                    <li>Nullam at nunc sed quam porttitor vestibulum</li>
+                </ul>
+            </div>
+    
+            <div class="border-t border-gray-300"></div>
+    
+            <div class="p-6">
+                <h3 class="text-xl font-semibold mb-4">Requirements</h3>
+                <ul class="list-disc ml-6">
+                    <li>Lorem ipsum dolor sit amet</li>
+                    <li>Consectetur adipiscing elit</li>
+                    <li>Nullam at nunc sed quam porttitor vestibulum</li>
+                </ul>
+            </div>
+    
+            <div class="border-t border-gray-300"></div>
+    
+            <button type="button">
+              Apply
+            </button>
+        </div>
+    </div>
 {% endblock %}
