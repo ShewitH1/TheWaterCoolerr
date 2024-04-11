@@ -69,14 +69,13 @@ CREATE TABLE IF NOT EXISTS posting_tags (
 );
 
 INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
-VALUES ('1', 'comp', 'abc', 'TheMan', 'image', 'image', 'this is a real comp', true);
-
-INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
-VALUES ('2', 'joke', '123', 'Prolific Portrayol', 'clown', 'improv', 'Improv group who never says no ;)', true);
-
-INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
-VALUES ('3', 'hire', 'xyz', 'Boston Consoling Group', 'group_hug', 'therapy office', 'Not to be confused with the consulting company', true);
-
-INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
+VALUES ('1', 'comp', 'abc', 'theman', 'image', 'image', 'this is a real comp', true),
+VALUES ('2', 'joke', '123', 'Prolific Portrayol', 'clown', 'improv', 'Improv group who never says no ;)', true),
+VALUES ('3', 'hire', 'xyz', 'Boston Consoling Group', 'group_hug', 'therapy office', 'Not to be confused with the consulting company', true),
 VALUES ('4', 'live', 'wire', 'School of Hard Rock', 'concert', 'guitar hero 3', 'We are here to rock!', true);
+
+
+
+
+
 
