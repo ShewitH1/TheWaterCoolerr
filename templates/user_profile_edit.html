@@ -1,0 +1,31 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
+<link href="{{ url_for('static', filename='css/profile_edit.css')}}" rel="stylesheet">
+{% if profile %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <div class="container-fluid bg-dark p-1 rounded" style="width: 1200px; height: 900px"">
+            {% if profile['firstname'] %}
+            <a  href="/profile?profileType=user&id={{ profile['profile_id'] }}"><button type="button" class="mt-2 mb-3 mx-3 btn btn-success">Go Back</button></a>
+            <form id="signupForm" class="w-50" onsubmit="signup(event)" enctype="multipart/form-data">
+                <div class="edit-form-line">
+                    <label for="firstnameField" class="field-label">Firstname</label>
+                    <input class="form-control text-field-name" id="firstnameField" type="text" placeholder="{{profile['firstname']}}">
+                    <label for="lastnameField" class="field-label">Firstname</label>
+                    <input class="form-control text-field-name" id="lastnameField" type="text" placeholder="{{profile['lastname']}}">
+                </div>
+                <button type="submit" id="submitButton" class="btn btn-success mt-2 mx-3">Save Profile Info</button>
+            </form>
+            {% else %}
+            <a href="/profile?profileType=company&id={{ profile['company_id'] }}"><button type="button" class="mt-2 mb-3 mx-2 btn btn-success">Go Back</button></a>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">Oops! Something went wrong :(</h1>
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">It seems like you searched an invalid profile ID.</h1>
+    </div>
+{% endif %}
+{% endblock %}

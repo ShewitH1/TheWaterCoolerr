@@ -112,55 +112,106 @@ function signup(event) {
 
     console.log(formData);
 
-    $.ajax({
-        type: 'POST',
-        url: '/signup',
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function(response) {
-            if ('redirect' in response)
-            {
-                window.location.href = response.redirect;
-            }
-            var profileTypeContainer = document.getElementById('profileTypeContainer');
-            profileTypeContainer.innerHTML='';
-            formRender.innerHTML='';
-            var extrasContainer = document.getElementById('signupExtras');
-            var id;
-            var profileType;
-            console.log(response)
-            if ('user_id' in response)
-            {
-                id = response['user_id'];
-                profileType = 'user';
-            } else if ('company_id' in response)
-            {
-                id = response['company_id'];
-                profileType = 'company'
-            }
-            extrasContainer.innerHTML =
-            `<div id="extrasData" data-extras-id=${id} data-extras-profileType=${profileType}></div>
-            <div class="mt-2 mb-2">
-                <label for="profileBio">Enter a profile bio (Optional)</label>
-                <textarea class="form-control" id="profileBio" name="newBio" rows="1"></textarea>
-            </div>
-            <div class="mt-2 mb-2">
-                <label for="profileUpload">Upload profile picture, best fit will be 1:1 aspect ratio (square) (Optional)</label>
-            </div>
-            <div class="mt-2 mb-2">
-                <input type="file" class="form-control-file" id="profileUpload" name="newProfile" accept="image/*">
-            </div>
-            <div class="mt-2 mb-2">
-                <label for="bannerUpload">Upload profile banner, best fit will be 3:1 aspect ratio (Optional)</label>
-            </div>
-            <div class="mt-2 mb-2">
-                <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
-            </div>`;
-        },
-        error: function(error) {
-            console.error('Error tracking analytics event:', error);
+    fetch('/signup', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (!response.ok)
+        {
+            throw new Error("Response Error!");
         }
+        return response.json();
+    })
+    .then(response => {
+        if ('redirect' in response) {
+            window.location.href = response.redirect;
+        }
+        const profileTypeContainer = document.getElementById('profileTypeContainer');
+        profileTypeContainer.innerHTML = '';
+        formRender.innerHTML='';
+        const extrasContainer = document.getElementById('signupExtras');
+        let id;
+        let profileType;
+        console.log(response);
+        if ('user_id' in response) {
+            id = response.user_id;
+            profileType = 'user';
+        } else if ('company_id' in response) {
+            id = response.company_id;
+            profileType = 'company';
+        }
+        extrasContainer.innerHTML =
+        `<div id="extrasData" data-extras-id=${id} data-extras-profileType=${profileType}></div>
+        <div class="mt-2 mb-2">
+            <label for="profileBio">Enter a profile bio (Optional)</label>
+            <textarea class="form-control" id="profileBio" name="newBio" rows="1"></textarea>
+        </div>
+        <div class="mt-2 mb-2">
+            <label for="profileUpload">Upload profile picture, best fit will be 1:1 aspect ratio (square) (Optional)</label>
+        </div>
+        <div class="mt-2 mb-2">
+            <input type="file" class="form-control-file" id="profileUpload" name="newProfile" accept="image/*">
+        </div>
+        <div class="mt-2 mb-2">
+            <label for="bannerUpload">Upload profile banner, best fit will be 3:1 aspect ratio (Optional)</label>
+        </div>
+        <div class="mt-2 mb-2">
+            <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
+        </div>`;
+    })
+    .catch(error => {
+        console.error('Error tracking analytics event:', error);
     });
+    // $.ajax({
+    //     type: 'POST',
+    //     url: '/signup',
+    //     data: formData,
+    //     contentType: false,
+    //     cache: false,
+    //     processData: false,
+    //     success: function(response) {
+    //         if ('redirect' in response)
+    //         {
+    //             window.location.href = response.redirect;
+    //         }
+    //         var profileTypeContainer = document.getElementById('profileTypeContainer');
+    //         profileTypeContainer.innerHTML='';
+    //         formRender.innerHTML='';
+    //         var extrasContainer = document.getElementById('signupExtras');
+    //         var id;
+    //         var profileType;
+    //         console.log(response)
+    //         if ('user_id' in response)
+    //         {
+    //             id = response['user_id'];
+    //             profileType = 'user';
+    //         } else if ('company_id' in response)
+    //         {
+    //             id = response['company_id'];
+    //             profileType = 'company'
+    //         }
+    //         extrasContainer.innerHTML =
+    //         `<div id="extrasData" data-extras-id=${id} data-extras-profileType=${profileType}></div>
+    //         <div class="mt-2 mb-2">
+    //             <label for="profileBio">Enter a profile bio (Optional)</label>
+    //             <textarea class="form-control" id="profileBio" name="newBio" rows="1"></textarea>
+    //         </div>
+    //         <div class="mt-2 mb-2">
+    //             <label for="profileUpload">Upload profile picture, best fit will be 1:1 aspect ratio (square) (Optional)</label>
+    //         </div>
+    //         <div class="mt-2 mb-2">
+    //             <input type="file" class="form-control-file" id="profileUpload" name="newProfile" accept="image/*">
+    //         </div>
+    //         <div class="mt-2 mb-2">
+    //             <label for="bannerUpload">Upload profile banner, best fit will be 3:1 aspect ratio (Optional)</label>
+    //         </div>
+    //         <div class="mt-2 mb-2">
+    //             <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
+    //         </div>`;
+    //     },
+    //     error: function(error) {
+    //         console.error('Error tracking analytics event:', error);
+    //     }
+    // });
 }

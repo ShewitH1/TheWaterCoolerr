@@ -1,7 +1,7 @@
 from repositories.db import get_pool
 from psycopg.rows import dict_row
 from datetime import datetime
-import json
+import random
 
 # User Profile Get Methods
 
@@ -39,6 +39,7 @@ def get_user_profile_by_id(user_id):
             with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute('''
                                 SELECT
+                                    profile_id,
                                     firstname,
                                     lastname,
                                     profile_image,
@@ -92,12 +93,14 @@ def create_new_user_profile(profile_id, email, password, fname, lname):
     if check_user_id_taken(profile_id) or check_user_email_taken(email):
         return None
     try:
+        profile_picture = get_random_default_profile()
+        profile_banner = "img/site/default-profile/default-banner.png"
         with pool.getconn() as conn:
             with conn.cursor(row_factory=dict_row) as cursor:
                 cursor.execute('''
-                                INSERT INTO user_account(profile_id, email, pass, firstname, lastname)
-                                VALUES (%s, %s, %s, %s, %s)
-                                ''', (profile_id, email, password, fname, lname))
+                                INSERT INTO user_account(profile_id, email, pass, firstname, lastname, profile_image, profile_banner)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                                ''', (profile_id, email, password, fname, lname, profile_picture, profile_banner))
                 conn.commit()
     except Exception as e:
         print(e)
@@ -106,6 +109,18 @@ def create_new_user_profile(profile_id, email, password, fname, lname):
         if conn is not None:
             pool.putconn(conn)
 
+
+# Helper Function for above method
+
+def get_random_default_profile():
+    banner_dict = {
+        0 : "img/site/default-profile/default-profile-f-1.png",
+        1 : "img/site/default-profile/default-profile-f-2.png",
+        2 : "img/site/default-profile/default-profile-m-1.png",
+        3 : "img/site/default-profile/default-profile-m-2.png"
+    }
+    rand = random.randint(0,3)
+    return banner_dict[rand]
 
 #def create_new_company_profile(company_id, login, password, cname):
 

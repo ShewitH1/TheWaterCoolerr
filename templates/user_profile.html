@@ -3,24 +3,30 @@
 {% block body %}
 <link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
 <link href="{{ url_for('static', filename='css/profile.css')}}" rel="stylesheet">
-<div class="container-fluid bg-secondary p-4" style="height: 100%;">
-    <div class="container-fluid bg-dark p-1 rounded mb-4" style="width: 1200px; height: 400px">
-        <!-- Content goes here -->
-        {% if image %}
+{% if profile %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <div class="container-fluid bg-dark p-1 rounded mb-4 profile-header-container">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename=profile['profile_banner']) }}" alt="Image 1" class="banner-image">
+                <img src="{{ url_for('static', filename=profile['profile_image']) }}" alt="Image 2" class="overlay-image rounded">
+                {% if profile['profile_id'] == sessionProfile['profile_id'] %}
+                <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+                <button type="button" class="btn btn-outline-success profile-edit-button" id="editProfileButton" data-profile-id="{{sessionProfile['profile_id']}}">Edit Profile</button>  
+                {% endif %}
+            </div>
+            <div class="header-text-name-container">
+                <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed';"">{{profile['firstname']}} {{profile['lastname']}}</h1>
+                <h3 class="text-light" style="font-family: 'IBM Plex Sans Condensed';">{{profile['profile_bio']}}</h3>         
+            </div>
+        </div>
+        <div class="container-fluid bg-dark p-1 rounded profile-body-container">
 
-        {% else %}
-        <div class="image-container">
-            <img width=100% height=175 src="{{ url_for('static', filename='img/site/profile/default-banner.png') }}" alt="Image 1">
-            <img src="{{ url_for('static', filename='img/site/profile/default-profile.png') }}" alt="Image 2" class="img-fluid overlay-image rounded">
-        </div>
-        {% endif %}
-        <div class="header-text-name-container">
-            <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed';">{{profile['firstname']}} {{profile['lastname']}}</h1>
-            <h3 class="text-light" style="font-family: 'IBM Plex Sans Condensed';">{{profile['profile_bio']}}</h3>
         </div>
     </div>
-    <div class="container-fluid bg-dark p-1 rounded" style="width: 1200px; height: 900px"">
-        
+{% else %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">Oops! Something went wrong :(</h1>
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">It seems like you searched an invalid profile ID.</h1>
     </div>
-</div>
+{% endif %}
 {% endblock %}

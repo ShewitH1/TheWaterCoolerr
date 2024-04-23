@@ -1,4 +1,4 @@
-from flask import Flask, abort, redirect, render_template, request, session, jsonify
+from flask import Flask, abort, redirect, render_template, request, session, jsonify, url_for
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
@@ -141,7 +141,6 @@ def profile():
         session['next'] = request.url
     else:
         session['next'] = request.url
-
     profileType = request.args.get('profileType')
     print(profileType)
     profileId = request.args.get('id')
@@ -149,11 +148,32 @@ def profile():
     if profileType == 'user':
         profile = profile_repository.get_user_profile_by_id(profileId)
         print(profile)
+        print(sessionProfile)
         return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile)
     elif profileType == 'company':
         profile = profile_repository.get_company_profile_by_id(profileId)
     else:
         abort(400)
+
+@app.route('/editProfile', methods=['POST'])
+def editProfile():
+    if request.method == 'POST':
+        data = request.json
+        print(request)
+        editProfileID = data.get('profile_id')
+        sessionProfile = None
+        if 'sessionProfile' in session:
+            sessionProfile = session['sessionProfile']
+            session['next'] = request.url
+        else:
+            session['next'] = request.url
+        if sessionProfile['profile_id'] == editProfileID:
+            editProfileData = profile_repository.get_user_profile_by_id(editProfileID)
+            htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile)
+            return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
+        else:
+            return jsonify({'message':'edit authentication failed'})
+
 @app.post('/signupUser')
 def signupUser():
     print('none')
