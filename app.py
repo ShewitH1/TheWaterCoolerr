@@ -213,4 +213,3 @@ def company_login():
             return render_template("login.html", account_not_exists="TRUE")
     else:
         return render_template('login.html')
-    pass
