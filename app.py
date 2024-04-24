@@ -54,7 +54,7 @@ def login():
     else:
         return render_template('login.html')
 
-# user signup
+# user/company signup
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
@@ -204,7 +204,7 @@ def company_login():
             session['sessionProfile'] = profile_repository.get_company_by_login(company_login)
             session['password'] = password
             session['type'] = 'company'  # Set session type here
-            
+
             if session['next'] is not None:
                 return redirect(session['next'])
             else:
