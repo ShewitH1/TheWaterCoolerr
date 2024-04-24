@@ -34,12 +34,11 @@ CREATE TABLE IF NOT EXISTS workplace_experience (
     description TEXT,
     watercooler BOOLEAN,
     public BOOLEAN,
-    PRIMARY KEY (profile_id, company_id, job_title, start_date),
+    PRIMARY KEY (profile_id),
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-DROP TYPE IF EXISTS education_level;
 CREATE TYPE education_level AS ENUM('GED', 'Certification', 'Bachelors', 'Masters', 'PhD');
 
 CREATE TABLE IF NOT EXISTS education_experience (
@@ -49,7 +48,7 @@ CREATE TABLE IF NOT EXISTS education_experience (
     study_area VARCHAR(64) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    PRIMARY KEY (profile_id, institution_name, education_level, start_date),
+    PRIMARY KEY (profile_id),
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -60,7 +59,7 @@ CREATE TABLE IF NOT EXISTS job_posting (
     description TEXT NOT NULL,
     salary FLOAT NOT NULL,
     posting_date timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (posting_id, company_id),
+    PRIMARY KEY (posting_id),
     FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -68,21 +67,63 @@ CREATE TABLE IF NOT EXISTS posting_tags (
     
 );
 
-INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
-VALUES ('1', 'comp', 'abc', 'theman', 'image', 'image', 'this is a real comp', true),
-VALUES ('2', 'joke', '123', 'Prolific Portrayol', 'clown', 'improv', 'Improv group who never says no ;)', true),
-VALUES ('3', 'hire', 'xyz', 'Boston Consoling Group', 'group_hug', 'therapy office', 'Not to be confused with the consulting company', true),
-VALUES ('4', 'live', 'wire', 'School of Hard Rock', 'concert', 'guitar hero 3', 'We are here to rock!', true);
+CREATE TABLE application_questions (
+    id SERIAL PRIMARY KEY,
+    posting_id VARCHAR(24),
+    question_text TEXT NOT NULL,
+    response_text TEXT,
+    FOREIGN KEY (posting_id) REFERENCES job_posting(posting_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
 
+CREATE TABLE application_answers (
+    id SERIAL PRIMARY KEY,
+    profile_id VARCHAR(16) NOT NULL,
+    posting_id VARCHAR(24) NOT NULL,
+    question_id INTEGER NOT NULL,
+    response_text TEXT NOT NULL,
+    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (posting_id) REFERENCES job_posting(posting_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (question_id) REFERENCES application_questions(id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
+VALUES ('COMP001', 'comp', 'abc', 'theman', 'image', 'image', 'this is a real comp', true);
+
+INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
+VALUES ('COMP002', 'joke', '123', 'Prolific Portrayol', 'clown', 'improv', 'Improv group who never says no ;)', true);
+
+INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
+VALUES ('COMP003', 'hire', 'xyz', 'Boston Consoling Group', 'group_hug', 'therapy office', 'Not to be confused with the consulting company', true);
+
+INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
+VALUES ('COMP004', 'live', 'wire', 'School of Hard Rock', 'concert', 'guitar hero 3', 'We are here to rock!', true);
 
 INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST001', 'COMP001', 'Software Engineer', 'We are seeking a highly skilled software engineer to join our dynamic team.', 80000.00);
+
+INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST002', 'COMP002', 'Data Analyst', 'We are looking for a talented data analyst to help us analyze and interpret data.', 60000.00);
+
+INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST003', 'COMP003', 'Marketing Manager', 'Join our marketing team and lead strategic marketing initiatives.', 70000.00);
+
+INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST004', 'COMP004', 'Graphic Designer', 'Create stunning visuals and designs for our marketing campaigns.', 55000.00);
+
+INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST005', 'COMP002', 'Business Development Manager', 'Drive business growth through strategic partnerships and initiatives.', 75000.00);
+
+INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST006', 'COMP001', 'Product Manager', 'Lead the development and launch of new products.', 90000.00);
 
+INSERT INTO application_questions (posting_id, question_text)
+VALUES ('POST001', 'Why should we consider you for this position?');
 
+INSERT INTO application_questions (posting_id, question_text)
+VALUES ('POST001', 'What is your highest level of education?');
 
+INSERT INTO application_questions (posting_id, question_text)
+VALUES ('POST001', 'What is something you have worked on that you are proud of?');
 
+INSERT INTO application_questions (posting_id, question_text)
+VALUES ('POST001', 'Please write down your previous work experience.');
