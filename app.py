@@ -2,8 +2,7 @@ from flask import Flask, abort, redirect, render_template, request, session, jso
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
-from repositories import profile_repository, job_repository
-from job_repository import get_job_posting_for_table, create_job_posting, update_job_posting, delete_job_posting, search_job_posting
+from repositories import profile_repository, job_repository, application_repository
 
 load_dotenv()
 
@@ -216,6 +215,30 @@ def search_job_posting_route():
     if job_postings is False:
         abort(500, description="Error searching job postings")
     return render_template('job_search.html', job_postings=job_postings)
+
 @app.get('/job_listing.html')
 def job_listing():
     return render_template('job_listing.html')
+
+#    if 'sessionProfile' not in session:
+#        return redirect('/login')
+
+@app.route('/apply/<posting_id>')
+def apply(posting_id):
+    questions = application_repository.get_questions_for_application(posting_id)
+    return render_template('application.html', questions=questions, posting_id=posting_id)
+
+@app.post('/submit_application/<posting_id>')
+def submit_application(posting_id):
+    profile_id = session.get('profile_id')
+    # must be logged in to apply.....
+    if not profile_id:
+        return redirect('/login')
+    answers = {key: request.form[key] for key in request.form.keys() if key.startswith('answers')}
+    # basic form validation
+    if not posting_id or not profile_id or not answers:
+        abort(400, description="Missing form data")
+    success = application_repository.submit_application(profile_id, posting_id, answers)
+    if not success:
+        abort(500, description="Error submitting application")
+    return redirect(url_for('job_listing'))
