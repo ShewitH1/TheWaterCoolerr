@@ -70,7 +70,7 @@ def signup():
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
                 profile_repository.create_new_user_profile(user_id, user_email, hashed_password, firstname, lastname)
                 return jsonify({'message':'new user profile created successfully', 'user_id':user_id});
-            elif payload_tag == 'company':
+            elif request.form.get('profile_type') == 'company':
                 company_id = request.form.get('company_id')
                 company_login = request.form.get('login')
                 password = request.form.get('pass')
@@ -204,8 +204,7 @@ def company_login():
             session['sessionProfile'] = profile_repository.get_company_by_login(company_login)
             session['password'] = password
             session['type'] = 'company'  # Set session type here
-
-
+            
             if session['next'] is not None:
                 return redirect(session['next'])
             else:
@@ -215,17 +214,3 @@ def company_login():
     else:
         return render_template('login.html')
     pass
-
-#company signup
-@app.route('/company_signup', methods=['GET','POST'])
-def company_signup():
-    if request.method == 'POST':
-        company_id = request.form.get('company_id')
-        company_login = request.form.get('company_login')
-        password = request.form.get('password')
-        company_name = request.form.get('company_name')
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        profile_repository.create_new_company_profile(company_id, company_login, hashed_password, company_name)
-        return jsonify({'message':'new company profile created successfully', 'company_id':company_id});
-    else:
-        return render_template('company_signup.html')
