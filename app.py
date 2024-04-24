@@ -2,8 +2,7 @@ from flask import Flask, abort, redirect, render_template, request, session, jso
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
-from repositories import profile_repository, job_repository
-from job_repository import get_job_posting_for_table, create_job_posting, update_job_posting, delete_job_posting, search_job_posting
+from repositories import profile_repository, job_repository, application_repository
 
 load_dotenv()
 
@@ -216,6 +215,14 @@ def search_job_posting_route():
     if job_postings is False:
         abort(500, description="Error searching job postings")
     return render_template('job_search.html', job_postings=job_postings)
+
 @app.get('/job_listing.html')
 def job_listing():
     return render_template('job_listing.html')
+
+@app.get('/application')
+def application():
+    if 'sessionProfile' not in session:
+        return redirect('/login')
+    questions = application_repository.get_questions_for_application('POST001')
+    return render_template('application.html', questions=questions)
