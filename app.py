@@ -126,15 +126,22 @@ def signup():
 #user logout
 @app.route('/logout', methods=['GET'])
 def logout():
-    redirect_link = None
-    if session['next'] is not None:
-        redirect_link = session['next']
-
+    next_url = session.get('next', '/')
     session.clear()
-    if redirect_link is not None:
-        return redirect(redirect_link)
-    else:
-        return redirect('/')
+    return redirect(next_url)
+
+# DEPRECATED
+# @app.route('/logout', methods=['GET'])
+# def logout():
+#     redirect_link = None
+#     if session['next'] is not None:
+#         redirect_link = session['next']
+
+#     session.clear()
+#     if redirect_link is not None:
+#         return redirect(redirect_link)
+#     else:
+#         return redirect('/')
 
 @app.route('/profile', methods=['GET'])
 def profile():
@@ -160,9 +167,10 @@ def profile():
     else:
         abort(400)
 
-@app.post('/signupUser')
-def signupUser():
-    print('none')
+# DEPRECATED - REDUNDANT
+# @app.post('/signupUser')
+# def signupUser():
+#     print('none')
 
 @app.get('/job_search.html')
 def job_search():
@@ -178,15 +186,46 @@ def job_listing():
     return render_template('job_listing.html')
 
 
-#company routes
+#COMPANY ROUTES
 #company login
 @app.route('/company_login', methods=['GET', 'POST'])
 def company_login():
-    # Handle company login here
+    if request.method == 'POST':
+        company_login = request.form.get("company_login")
+        print(company_login)
+        password = request.form.get("password")
+        print(password)
+        account_record = profile_repository.get_company_by_login(company_login)
+        print(account_record)
+        if account_record is not None:
+            if not bcrypt.check_password_hash(account_record['hashed_password'], password):
+                return redirect('/login')
+            
+            session['sessionProfile'] = profile_repository.get_company_by_login(company_login)
+            session['password'] = password
+            session['type'] = 'company'  # Set session type here
+
+
+            if session['next'] is not None:
+                return redirect(session['next'])
+            else:
+                return index()
+        else:
+            return render_template("login.html", account_not_exists="TRUE")
+    else:
+        return render_template('login.html')
     pass
 
 #company signup
-@app.route('/company_signup', methods=['GET', 'POST'])
+@app.route('/company_signup', methods=['GET','POST'])
 def company_signup():
-    # Handle company signup here
-    pass
+    if request.method == 'POST':
+        company_id = request.form.get('company_id')
+        company_login = request.form.get('company_login')
+        password = request.form.get('password')
+        company_name = request.form.get('company_name')
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        profile_repository.create_new_company_profile(company_id, company_login, hashed_password, company_name)
+        return jsonify({'message':'new company profile created successfully', 'company_id':company_id});
+    else:
+        return render_template('company_signup.html')
