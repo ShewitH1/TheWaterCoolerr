@@ -220,9 +220,25 @@ def search_job_posting_route():
 def job_listing():
     return render_template('job_listing.html')
 
-@app.get('/application')
-def application():
-    if 'sessionProfile' not in session:
+#    if 'sessionProfile' not in session:
+#        return redirect('/login')
+
+@app.route('/apply/<posting_id>')
+def apply(posting_id):
+    questions = application_repository.get_questions_for_application(posting_id)
+    return render_template('application.html', questions=questions, posting_id=posting_id)
+
+@app.post('/submit_application/<posting_id>')
+def submit_application(posting_id):
+    profile_id = session.get('profile_id')
+    # must be logged in to apply.....
+    if not profile_id:
         return redirect('/login')
-    questions = application_repository.get_questions_for_application('POST001')
-    return render_template('application.html', questions=questions)
+    answers = {key: request.form[key] for key in request.form.keys() if key.startswith('answers')}
+    # basic form validation
+    if not posting_id or not profile_id or not answers:
+        abort(400, description="Missing form data")
+    success = application_repository.submit_application(profile_id, posting_id, answers)
+    if not success:
+        abort(500, description="Error submitting application")
+    return redirect(url_for('job_listing'))

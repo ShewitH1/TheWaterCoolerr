@@ -28,16 +28,19 @@ Application
                     Please answer the following questions to the best of your ability:
                 </h3>
                 <div class="mt-4"></div>
-                {% for question in questions %}
-                <div class="form-group">
-                    <label for="{{ question[1] }}">{{ question[2] }}</label>
-                    <textarea class="form-control" id="{{ question[1] }}" name="{{ question[1] }}" rows="2"></textarea>
-                    <div class="mt-4"></div>
-                </div>
-                {% endfor %}
-                <div class="text-center">
-                    <button class="btn btn-primary" type="submit">Submit Application</button>
-                </div>
+                <form method="POST" action="{{ url_for('submit_application', posting_id=posting_id) }}">
+                    {% for question in questions %}
+                    <div class="form-group">
+                        <label for="question{{ question[0] }}">{{ question[2] }}</label>
+                        <textarea class="form-control" id="question{{ question[0] }}" name="answers[{{ question[0] }}]" rows="2" required></textarea>
+                        <div class="mt-4"></div>
+                    </div>
+                    {% endfor %}
+                    <input type="hidden" name="posting_id" value="{{ posting_id }}">
+                    <div class="text-center">
+                        <button class="btn btn-primary" type="submit">Submit Application</button>
+                    </div>
+                </form>
                 <div class="mt-4"></div>
             </div>
         </div>
