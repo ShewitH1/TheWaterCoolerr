@@ -2,7 +2,7 @@ from flask import Flask, abort, redirect, render_template, request, session, jso
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
-from repositories import profile_repository, job_repository
+from repositories import profile_repository, job_repository, application_repository
 
 load_dotenv()
 
