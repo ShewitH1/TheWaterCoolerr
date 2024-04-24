@@ -18,6 +18,7 @@ def index():
     sessionProfile = None
     if 'sessionProfile' in session:
         sessionProfile = session['sessionProfile']
+        sessionType = session.get('type')
         session['next'] = request.url
     else:
         session['next'] = request.url
@@ -25,7 +26,7 @@ def index():
     return render_template('index.html', sessionProfile=sessionProfile)
 
 
-# Login & Account Creation
+# user login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -41,6 +42,8 @@ def login():
             
             session['sessionProfile'] = profile_repository.get_user_by_login(username)
             session['password'] = password
+            session['type'] = 'user'  # Set session type here
+
 
             if session['next'] is not None:
                 return redirect(session['next'])
@@ -51,6 +54,7 @@ def login():
     else:
         return render_template('login.html')
 
+# user signup
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
@@ -119,6 +123,7 @@ def signup():
     else:
         return render_template('signup.html')
 
+#user logout
 @app.route('/logout', methods=['GET'])
 def logout():
     redirect_link = None
@@ -154,6 +159,7 @@ def profile():
         profile = profile_repository.get_company_profile_by_id(profileId)
     else:
         abort(400)
+
 @app.post('/signupUser')
 def signupUser():
     print('none')
@@ -170,3 +176,17 @@ def job_search():
 @app.get('/job_listing.html')
 def job_listing():
     return render_template('job_listing.html')
+
+
+#company routes
+#company login
+@app.route('/company_login', methods=['GET', 'POST'])
+def company_login():
+    # Handle company login here
+    pass
+
+#company signup
+@app.route('/company_signup', methods=['GET', 'POST'])
+def company_signup():
+    # Handle company signup here
+    pass
