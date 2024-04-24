@@ -79,11 +79,10 @@ CREATE TABLE application_answers (
     id SERIAL PRIMARY KEY,
     profile_id VARCHAR(16) NOT NULL,
     posting_id VARCHAR(24) NOT NULL,
-    company_id VARCHAR(16) NOT NULL,
     question_id INTEGER NOT NULL,
     response_text TEXT NOT NULL,
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (posting_id, company_id) REFERENCES job_posting(posting_id, company_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (posting_id) REFERENCES job_posting(posting_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES application_questions(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -115,16 +114,16 @@ INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST005', 'COMP002', 'Business Development Manager', 'Drive business growth through strategic partnerships and initiatives.', 75000.00);
 
 INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
-VALUES ('POST006', '1', 'Product Manager', 'Lead the development and launch of new products.', 90000.00);
+VALUES ('POST006', 'COMP001', 'Product Manager', 'Lead the development and launch of new products.', 90000.00);
 
-INSERT INTO application_questions (posting_id, company_id, question_text)
+INSERT INTO application_questions (posting_id, question_text)
 VALUES ('POST001', 'Why should we consider you for this position?');
 
-INSERT INTO application_questions (posting_id, company_id, question_text)
+INSERT INTO application_questions (posting_id, question_text)
 VALUES ('POST001', 'What is your highest level of education?');
 
-INSERT INTO application_questions (posting_id, company_id, question_text)
+INSERT INTO application_questions (posting_id, question_text)
 VALUES ('POST001', 'What is something you have worked on that you are proud of?');
 
-INSERT INTO application_questions (posting_id, company_id, question_text)
+INSERT INTO application_questions (posting_id, question_text)
 VALUES ('POST001', 'Please write down your previous work experience.');
