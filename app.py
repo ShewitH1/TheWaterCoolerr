@@ -219,6 +219,7 @@ def search_job_posting_route():
     if job_postings is False:
         abort(500, description="Error searching job postings")
     return render_template('job_search.html', job_postings=job_postings)
+
 @app.get('/job_listing.html')
 def job_listing():
     return render_template('job_listing.html')
