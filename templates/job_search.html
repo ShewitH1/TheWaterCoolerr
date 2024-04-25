@@ -21,7 +21,7 @@
     </div>
   </div>
 
-  {% for job in job_posting %}
+  {% for job in job_postings %}
     <div class="mt-4">
       <div class="card border-secondary rounded-lg">
         <div class="card-body">
@@ -29,6 +29,8 @@
           <ul class="list-unstyled">
             <li><strong>Description:</strong> {{ job.description }}</li>
             <li><strong>Salary:</strong> {{ job.salary }}</li>
+            <li>><strong>Posting Date</strong> {{ job.posting_date }}</li>
+            <li><strong>Company ID</strong> {{ job.company_id }}</li>
           </ul>
           <button class="btn btn-primary">View</button>
         </div>
