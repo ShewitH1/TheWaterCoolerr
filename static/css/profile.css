@@ -1,18 +1,256 @@
+.profile-header-container {
+    width: 95%;
+    min-height: 450px;
+    height: auto;
+    max-width: 1200px;
+}
+
+.profile-body-container {
+    width: 95%;
+    min-height: 450px;
+    height: auto;
+    max-width: 1200px;
+}
+
 .image-container {
 position: relative;
 }
+
+.banner-image {
+    width: 100%;
+    height: 175px;
+}
+
 .overlay-image {
 position: absolute;
-top: 85px;
-left: 45px;
-width: 165px;
-height: 165px;
+top: 50%;
+left: 5%;
+height: 175px;
+width: 175px;
 border-style: inset;
 border-width: 2px;
 border-color: black;
 }
 
+.profile-edit-button {
+    position: absolute;
+    margin-top: 1%;
+    margin-left: 90%;
+    width: 100px;
+    font-size: 14px;
+}
+
 .header-text-name-container {
-    padding-left: 50px;
-    padding-top: 80px;
+    position: relative;
+    margin-left: 5%;
+    margin-top: 8%;
+}
+
+@media (max-width: 575.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+        .profile-edit-button {
+            margin-left:70%;
+            margin-top:2%;
+            font-size: 10px;
+        }
+        .banner-image {
+            height: 75px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 75px;
+            width: 75px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 11%;
+        }
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+        .profile-edit-button {
+            margin-left:70%;
+            margin-top:2%;
+            font-size: 10px;
+        }
+        .banner-image {
+            height: 75px; /* Adjusted height for smaller screens */
+        }
+
+        .overlay-image {
+            height: 75px;
+            width: 75px;
+        }
+        
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 11%;
+        }
+    }
+}
+
+/* Small devices (tablets) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+        .profile-edit-button {
+            margin-left:80%;
+            font-size: 12px;
+        }
+        .banner-image {
+            height: 100px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 100px;
+            width: 100px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 10%;
+        }
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+        .profile-edit-button {
+            margin-left:80%;
+            font-size: 12px;
+        }
+        .profile-edit-button {
+            width: 100px;
+            font-size: 10px;
+        }
+        .banner-image {
+            height: 100px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 100px;
+            width: 100px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 9%;
+        }
+    }
+}
+
+/* Medium devices (laptops) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+        .profile-edit-button {
+            margin-left:80%;
+            font-size: 12px;
+        }
+        .banner-image {
+            height: 125px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 125px;
+            width: 125px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 10%;
+        }
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+        .profile-edit-button {
+            margin-left: 80%;
+            font-size: 12px;
+        }
+        .banner-image {
+            height: 125px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 125px;
+            width: 125px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 8%;
+        }
+    }
+}
+
+/* Large devices (desktops) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+        .profile-edit-button {
+            margin-left: 85%;
+            font-size: 14px;
+        }
+        .banner-image {
+            height: 150px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 150px;
+            width: 150px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 9%;
+        }
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+        .profile-edit-button {
+            margin-left: 85%;
+            font-size: 14px;
+        }
+        .banner-image {
+            height: 150px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 150px;
+            width: 150px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 8%;
+        }
+    }
+}
+
+/* Extra large devices (large desktops) */
+@media (min-width: 1200px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+        .banner-image {
+            height: 175px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 175px;
+            width: 175px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 8%;
+        }
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+        .banner-image {
+            height: 175px; /* Adjusted height for smaller screens */
+        }
+        .overlay-image {
+            height: 175px;
+            width: 175px;
+        }
+        .header-text-name-container {
+            position: relative;
+            margin-left: 5%;
+            margin-top: 7%;
+        }
+    }
 }

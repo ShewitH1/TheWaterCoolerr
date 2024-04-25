@@ -1,0 +1,78 @@
+.field-label {
+    font-family:'IBM Plex Sans Condensed';
+    color: whitesmoke;
+    font-size:18px;
+}
+
+.text-field-name {
+    font-family: 'IBM Plex Sans Condensed';
+    color: grey;
+}
+
+.edit-form-line {
+    margin-left: 5%;
+}
+
+.display-inline {
+    display: inline-block;
+}
+
+
+@media (max-width: 575.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+
+    }
+}
+
+/* Small devices (tablets) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+
+    }
+}
+
+/* Medium devices (laptops) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+
+    }
+}
+
+/* Large devices (desktops) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+
+    }
+}
+
+/* Extra large devices (large desktops) */
+@media (min-width: 1200px) {
+    @media screen and (device-aspect-ratio: 16/9)
+    {
+
+    }
+    @media screen and (device-aspect-ratio: 16/10)
+    {
+
+    }
+}

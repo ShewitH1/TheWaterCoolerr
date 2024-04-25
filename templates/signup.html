@@ -1,8 +1,7 @@
 {% extends '_layout.html' %}
 
 {% block body %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ url_for('static', filename='js/signupForm.js') }}"></script>
+<script src="{{ url_for('static', filename='js/signup_form.js') }}"></script>
 <form id="signupForm" class="w-50" onsubmit="signup(event)" enctype="multipart/form-data">
     <div class="mt-2 mb-2" id="profileTypeContainer">
         <label for="profileType">Create an Individual or Company Profile?</label>

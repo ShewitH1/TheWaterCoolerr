@@ -1,0 +1,118 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
+<link href="{{ url_for('static', filename='css/profile_edit.css')}}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/profile_edit.js') }}"></script>
+{% if profile %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <div class="container-fluid bg-dark p-1 rounded" style="width: 95%; min-height:100vh; height:auto;">
+            {% if profile['firstname'] %}
+            <div id="profileDataDiv" data-profile-type="user" data-profile-id="{{profile['profile_id']}}"></div>
+            <a  href="/profile?profileType=user&id={{ profile['profile_id'] }}"><button type="button" class="mt-2 mb-3 mx-3 btn btn-success">Go Back</button></a>
+            <form id="editProfileForm" class="mx-3" enctype="multipart/form-data">
+                <div class="row my-2">
+                    <div class="col-3">
+                        <label for="firstnameField" class="field-label">Firstname:</label>
+                        <input class="form-control" id="firstnameField" type="text" placeholder="{{profile['firstname']}}" value="{{profile['firstname']}}">
+                    </div>
+                    <div class="col-3">
+                        <label for="lastnameField" class="field-label">Firstname:</label>
+                        <input class="form-control" id="lastnameField" type="text" placeholder="{{profile['lastname']}}" value="{{profile['lastname']}}">
+                    </div>
+                    <div class="col">
+                        <label for="bioField" class="field-label">Enter Profile Bio:</label>
+                        <input class="form-control" id="bioField" type="text" placeholder="{{profile['profile_bio']}}" value="{{profile['profile_bio']}}">
+                    </div>
+                </div>
+                <div class="row my-2">
+                        <label for="profileUpload" class="field-label">Upload profile picture, best fit will be 1:1 aspect ratio</label>
+                        <input type="file" class="form-control-file" id="profileUpload" name="newProfile" accept="image/*">
+                </div>
+                <div class="row my-2">
+                    <label for="bannerUpload" class="field-label">Upload profile banner, best fit will be 3:1 aspect ratio</label>
+                    <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
+                </div>
+                <div>
+                    <button type="button" display="hidden" id="submitButton" class="btn btn-success mt-2 mb-2">Save Profile Info</button>
+                </div>
+            </form>
+            <div class="mx-3">
+                <div id="workplaceExperienceContainer">
+                    <label for="workplaceExperienceContainer" class="field-label">Workplace Experience:</label>
+                    {% if work %}
+                        {% for exp in work %}
+                        <form id="workExpForm{{exp['work_experience_id']}}" class="mx-3">
+                            <div id="alert-div"></div>
+                            <div class="row my-2">
+                                <div class="col-4">
+                                    <label for="titleField" class="field-label">Job Title:</label>
+                                    <input class="form-control" id="titleField" type="text" {% if exp['job_title'] == None %} placeholder="" value="" {% else %} placeholder="{{exp['job_title']}}" value="{{exp['company_name']}}" {% endif %}>
+                                </div>
+                                <div class="col-4">
+                                    <label for="companyField" class="field-label">Company Name:</label>
+                                    <input class="form-control" id="companyField" type="text" placeholder="{{exp['company_name']}}" value="{{exp['company_name']}}">
+                                </div>
+                                <div class="col-4">
+                                    <label for="sectorSelect" class="field-label">Job Sector (Optional)</label>
+                                    <select class="form-select" id="sectorSelect" aria-label="Default select example">
+                                        <option selected>{{exp['job_sector']}}</option>
+                                        {% if sectors %}
+                                            {% for value in sectors %}
+                                            <option value="{{value}}"">{{value}}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col">
+                                    <label for="descField" class="field-label">Enter Brief Job Description:</label>
+                                    <textarea class="form-control" id="descField" type="text">{{exp['description']}}</textarea>
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col-6">
+                                    <label for="startDate" class="field-label">Position Start Date:</label>
+                                    <input type="date" class="form-control" id="startDate" name="startDate" max=${formattedDate} min="1940-00-00" value="{{exp['start_date']}}">
+                                </div>
+                                <div class="col-6">
+                                    <label for="endDate" class="field-label">Position End Date (if applicable):</label>
+                                    <input type="date" class="form-control" id="endDate" name="endDate" max=${formattedDate} min="1940-00-00">
+                                </div>
+                            </div>
+                            <div class="row my-2">
+                                <div class="col">
+                                    <input class="form-check-input" type="checkbox" value="true" id="waterCoolerCheck">
+                                    <label for="waterCoolerCheck" class="form-check-label field-label">Position Through TheWaterCooler?</label>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" id="save{{exp['work_experience_id']}}Button" class="btn btn-success mt-2 mb-2" onclick="updateWorkExperience('{{exp['work_experience_id']}}', titleField, companyField, sectorSelect, descField, startDate, endDate, waterCoolerCheck)">Save Experience</button>
+                                <button type="button" id="delete{{exp['work_experience_id']}}Button" class="btn btn-danger mt-2 mb-2" onclick="deleteWorkExperience('{{exp['work_experience_id']}}')">Delete</button>
+                            </div>
+                        </form>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <button id="addWorkButton" type="button" class="mt-2 mb-2 btn btn-success">Add Work Experience</button>
+                <div id="educationExperienceContainer">    
+                    <label for="educationExperienceContainer" class="field-label">Education Experience:</label>
+                </div>
+                <button id="addEducationButton" type="button" class="mt-2 mb-2 btn btn-success">Add Education Experience</button>
+                <div>
+                    <button id="saveAll" type="button" class="mt-2 mb-2 btn btn-success" onclick="saveAll()">Save All</button>
+                </div>  
+            </div>
+            {% else %}
+            <a href="/profile?profileType=company&id={{ profile['company_id'] }}"><button type="button" class="mt-2 mb-3 mx-2 btn btn-success">Go Back</button></a>
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">Oops! Something went wrong :(</h1>
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">It seems like you searched an invalid profile ID.</h1>
+    </div>
+{% endif %}
+{% endblock %}
