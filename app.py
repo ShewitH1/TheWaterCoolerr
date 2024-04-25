@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 import os
 
-from repositories import profile_repository, job_repository
+from repositories import profile_repository, job_repository, application_repository
 
 load_dotenv()
 
@@ -19,6 +19,7 @@ def index():
     sessionProfile = None
     if 'sessionProfile' in session:
         sessionProfile = session['sessionProfile']
+        sessionType = session.get('type')
         session['next'] = request.url
     else:
         session['next'] = request.url
@@ -26,7 +27,7 @@ def index():
     return render_template('index.html', sessionProfile=sessionProfile)
 
 
-# Login & Account Creation
+# user login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -42,6 +43,8 @@ def login():
             
             session['sessionProfile'] = profile_repository.get_user_by_login(username)
             session['password'] = password
+            session['type'] = 'user'  # Set session type here
+
 
             if session['next'] is not None:
                 return redirect(session['next'])
@@ -52,6 +55,7 @@ def login():
     else:
         return render_template('login.html')
 
+# user/company signup
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
@@ -66,7 +70,7 @@ def signup():
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
                 profile_repository.create_new_user_profile(user_id, user_email, hashed_password, firstname, lastname)
                 return jsonify({'message':'new user profile created successfully', 'user_id':user_id});
-            elif payload_tag == 'company':
+            elif request.form.get('profile_type') == 'company':
                 company_id = request.form.get('company_id')
                 company_login = request.form.get('login')
                 password = request.form.get('pass')
@@ -119,17 +123,12 @@ def signup():
     else:
         return render_template('signup.html')
 
+#user logout
 @app.route('/logout', methods=['GET'])
 def logout():
-    redirect_link = None
-    if session['next'] is not None:
-        redirect_link = session['next']
-
+    next_url = session.get('next', '/')
     session.clear()
-    if redirect_link is not None:
-        return redirect(redirect_link)
-    else:
-        return redirect('/')
+    return redirect(next_url)
 
 @app.route('/profile', methods=['GET'])
 def profile():
@@ -293,19 +292,111 @@ def deleteWork():
         status = profile_repository.delete_work_experience_by_id(exp_id)
         if status == 1:
             return jsonify({'message':'Successfully deleted work experience', 'response':'success'})
-@app.post('/signupUser')
-def signupUser():
-    print('none')
 
+# Posts the jobs to the job posting page
 @app.get('/job_search.html')
 def job_search():
     posting_id = request.args.get('posting_id')
-    all_jobs = job_repository.get_job_posting_for_table(posting_id)
-    if not all_jobs:
-        all_jobs = []
-    return render_template('job_search.html', job_posting=all_jobs)
+    job_posting = job_repository.get_job_posting_for_table(posting_id)
+    if not job_posting:
+        job_posting = []
+    return render_template('job_search.html', job_posting=job_posting)
 
+# Creates a new job posting
+@app.post('/create_job_posting')
+def create_job_posting_route():
+    job_title = request.form.get('job_title')
+    posting_date = request.form.get('posting_date')
+    description = request.form.get('description')
+    salary = request.form.get('salary')
+    company_id = request.form.get('company_id')
+    job_id = job_repository.create_job_posting(job_title, posting_date, description, salary, company_id)
+    if job_id is False:
+        abort(500, description="Error creating job posting")
+    return redirect(url_for('job_listing'))
+
+# Updates a job posting
+@app.post('/update_job_posting')
+def update_job_posting_route():
+    posting_id = request.form.get('posting_id')
+    job_title = request.form.get('job_title')
+    posting_date = request.form.get('posting_date')
+    description = request.form.get('description')
+    salary = request.form.get('salary')
+    company_id = request.form.get('company_id')
+    success = job_repository.update_job_posting(posting_id, job_title, posting_date, description, salary, company_id)
+    if not success:
+        abort(500, description="Error updating job posting")
+    return redirect(url_for('job_listing'))
+
+# Deletes a job posting
+@app.post('/delete_job_posting')
+def delete_job_posting_route():
+    posting_id = request.form.get('posting_id')
+    success = job_repository.delete_job_posting(posting_id)
+    if not success:
+        abort(500, description="Error deleting job posting")
+    return redirect(url_for('job_listing'))
+
+# Searches for job postings
+@app.get('/search_job_posting')
+def search_job_posting_route():
+    job_title = request.args.get('job_title')
+    posting_date = request.args.get('posting_date')
+    description = request.args.get('description')
+    salary = request.args.get('salary')
+    company_id = request.args.get('company_id')
+    job_postings = job_repository.search_job_posting(job_title, posting_date, description, salary, company_id)
+    if job_postings is False:
+        abort(500, description="Error searching job postings")
+    return render_template('job_search.html', job_postings=job_postings)
 
 @app.get('/job_listing.html')
 def job_listing():
     return render_template('job_listing.html')
+
+@app.route('/company_login', methods=['GET', 'POST'])
+def company_login():
+    if request.method == 'POST':
+        company_login = request.form.get("company_login")
+        print(company_login)
+        password = request.form.get("password")
+        print(password)
+        account_record = profile_repository.get_company_by_login(company_login)
+        print(account_record)
+        if account_record is not None:
+            if not bcrypt.check_password_hash(account_record['hashed_password'], password):
+                return redirect('/login')
+            
+            session['sessionProfile'] = profile_repository.get_company_by_login(company_login)
+            session['password'] = password
+            session['type'] = 'company'  # Set session type here
+
+            if session['next'] is not None:
+                return redirect(session['next'])
+            else:
+                return index()
+        else:
+            return render_template("login.html", account_not_exists="TRUE")
+    else:
+        return render_template('login.html')
+
+@app.route('/apply/<posting_id>')
+def apply(posting_id):
+    questions = application_repository.get_questions_for_application(posting_id)
+    return render_template('application.html', questions=questions, posting_id=posting_id)
+
+@app.post('/submit_application/<posting_id>')
+def submit_application(posting_id):
+    profile_id = session.get('profile_id')
+    # must be logged in to apply.....
+    if not profile_id:
+        return redirect('/login')
+    answers = {key: request.form[key] for key in request.form.keys() if key.startswith('answers')}
+    # basic form validation
+    if not posting_id or not profile_id or not answers:
+        abort(400, description="Missing form data")
+    success = application_repository.submit_application(profile_id, posting_id, answers)
+    if not success:
+        abort(500, description="Error submitting application")
+    return redirect(url_for('job_listing'))
