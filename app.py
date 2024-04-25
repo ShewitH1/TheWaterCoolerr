@@ -234,6 +234,11 @@ def search_job_posting_route():
 def job_listing():
     return render_template('job_listing.html')
 
+@app.get('/list/<int:posting_id>')
+def get_joblist(posting_id):
+    job = job_repository.get_job_posting_for_table(posting_id)
+    return render_template('listing_page.html', list2=job)
+
 @app.route('/company_login', methods=['GET', 'POST'])
 def company_login():
     if request.method == 'POST':
