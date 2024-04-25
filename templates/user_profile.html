@@ -3,8 +3,11 @@
 {% block body %}
 <link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
 <link href="{{ url_for('static', filename='css/profile.css')}}" rel="stylesheet">
+<script>
+    var baseURL = "{{ url_for('static', filename='') }}";
+</script>
 {% if profile %}
-    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+    <div class="container-fluid bg-secondary p-4" style="min-height: 100vh;">
         <div class="container-fluid bg-dark p-1 rounded mb-4 profile-header-container">
             <div class="image-container">
                 <img src="{{ url_for('static', filename=profile['profile_banner']) }}" alt="Image 1" class="banner-image">

@@ -2,12 +2,14 @@
     width: 95%;
     min-height: 450px;
     height: auto;
+    max-width: 1200px;
 }
 
 .profile-body-container {
     width: 95%;
     min-height: 450px;
     height: auto;
+    max-width: 1200px;
 }
 
 .image-container {

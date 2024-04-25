@@ -147,9 +147,11 @@ def profile():
     print(profileId)
     if profileType == 'user':
         profile = profile_repository.get_user_profile_by_id(profileId)
+        work = profile_repository.get_all_workplace_experience_by_profile(profileId)
         print(profile)
         print(sessionProfile)
-        return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile)
+        print(work)
+        return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile, work=work)
     elif profileType == 'company':
         profile = profile_repository.get_company_profile_by_id(profileId)
     else:
@@ -169,11 +171,73 @@ def editProfile():
             session['next'] = request.url
         if sessionProfile['profile_id'] == editProfileID:
             editProfileData = profile_repository.get_user_profile_by_id(editProfileID)
-            htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile)
+            work = profile_repository.get_all_workplace_experience_by_profile(editProfileID)
+            sectors = ["Information Technology", "Sales", "Marketing", "Construction", "Manufacturing", "Healthcare", "First Responder"]
+            htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile, work=work, sectors=sectors)
             return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
         else:
             return jsonify({'message':'edit authentication failed'})
 
+@app.route('/addWorkExperience', methods=['POST'])
+def addWork():
+    if request.method == 'POST':
+        data = request.json
+        profileID = data.get('profile_id')
+        print(profileID)
+        new_work_id = profile_repository.create_new_workplace_experience(profileID)
+        if new_work_id is not None:
+            sectors = ["Information Technology", "Sales", "Marketing", "Construction", "Manufacturing", "Healthcare", "First Responder"]
+            return jsonify({'message':'new work experience id created','workExpID':new_work_id, 'sectors':sectors})
+        else:
+            return jsonify({'message':'failed to create new workplace ID'})
+
+@app.route('/updateWorkExperience', methods=['POST'])
+def updateWork():
+    if request.method == 'POST':
+        data = request.json
+        print(data)
+        exp_id = data['work_experience_id']
+        if exp_id is None:
+            return jsonify({'message':'Failed to update work experience, missing id', 'response':'failure-id'})
+        title = data['job_title']
+        print(title)
+        if title is '':
+            return jsonify({'message':'Failed to update work experience, missing title', 'response':'failure-title'})
+        cmpy_name = data['company_name']
+        if cmpy_name is '':
+            return jsonify({'message':'Failed to update work experience, missing company name', 'response':'failure-name'})
+        sector = data['job_sector']
+        start_date = data['start_date']
+        if start_date is '':
+            return jsonify({'message':'Failed to update work experience, missing start-date', 'response':'failure-date'})
+        end_date = data['end_date']
+        if end_date is '':
+            end_date = "Present"
+        description = data['description']
+        water_cooler = data['waterCooler']
+        if water_cooler == "true":
+            water_cooler = True
+        else:
+            water_cooler = False
+        status = profile_repository.update_work_experience_by_id(exp_id, title, cmpy_name, sector, start_date, end_date, description, water_cooler)
+        print(status)
+        if status == 1:
+            return jsonify({'message':'Updated work experience successfully!', 'response':'success'})
+        elif status == -1:
+            return jsonify({'message':'Failed to update work experience, missing title', 'response':'failure-title'})
+        elif status == -2:
+            return jsonify({'message':'Failed to update work experience, missing id', 'response':'failure-id'})
+
+@app.route('/deleteWorkExperience', methods=['POST'])
+def deleteWork():
+    if request.method == 'POST':
+        data=request.json
+        exp_id = data['work_experience_id']
+        if exp_id is None:
+            return jsonify({'message':'Failed to delete work experience, missing id', 'response':'failure-id'})
+        status = profile_repository.delete_work_experience_by_id(exp_id)
+        if status == 1:
+            return jsonify({'message':'Successfully deleted work experience', 'response':'success'})
 @app.post('/signupUser')
 def signupUser():
     print('none')

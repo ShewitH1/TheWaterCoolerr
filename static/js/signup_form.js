@@ -80,8 +80,8 @@ function signup(event) {
         formData.append('pass', document.getElementById('passwordArea').value);
         formData.append('company_name', document.getElementById('companyName').value);
     } else {
-        var id = $('#extrasData').data('extras-id');
-        var profileType = $('#extrasData').data('extras-profiletype');
+        var id = document.getElementById('extrasData').getAttribute('data-extras-id');
+        var profileType = document.getElementById('extrasData').getAttribute('data-extras-profileType');
         formData.append('payload_tag', 'extra');
         formData.append('id', id);
         formData.append('profileType', profileType);

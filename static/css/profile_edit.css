@@ -7,12 +7,16 @@
 .text-field-name {
     font-family: 'IBM Plex Sans Condensed';
     color: grey;
-    width: 300px;
 }
 
 .edit-form-line {
     margin-left: 5%;
 }
+
+.display-inline {
+    display: inline-block;
+}
+
 
 @media (max-width: 575.98px) {
     @media screen and (device-aspect-ratio: 16/9)

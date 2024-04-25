@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
 CREATE TABLE IF NOT EXISTS user_account (
     profile_id VARCHAR(16) UNIQUE NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -24,20 +26,19 @@ CREATE TABLE IF NOT EXISTS company_account (
 );
 
 CREATE TABLE IF NOT EXISTS workplace_experience (
+    work_experience_id UUID DEFAULT uuid_generate_v4 (),
     profile_id VARCHAR(16) NOT NULL,
-    company_id VARCHAR(16) NOT NULL,
-    job_title VARCHAR(64) NOT NULL,
-    company_name VARCHAR(64) NOT NULL,
-    job_sector VARCHAR(64) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
+    job_title VARCHAR(64),
+    company_name VARCHAR(64),
+    job_sector VARCHAR(64),
+    start_date VARCHAR(10),
+    end_date VARCHAR(10),
     description TEXT,
     watercooler BOOLEAN,
-    public BOOLEAN,
-    PRIMARY KEY (profile_id, company_id, job_title, start_date),
-    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON UPDATE CASCADE ON DELETE CASCADE
+    PRIMARY KEY (work_experience_id),
+    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
 
 DROP TYPE IF EXISTS education_level;
 CREATE TYPE education_level AS ENUM('GED', 'Certification', 'Bachelors', 'Masters', 'PhD');
