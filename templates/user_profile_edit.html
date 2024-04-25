@@ -10,19 +10,19 @@
             {% if profile['firstname'] %}
             <div id="profileDataDiv" data-profile-type="user" data-profile-id="{{profile['profile_id']}}"></div>
             <a  href="/profile?profileType=user&id={{ profile['profile_id'] }}"><button type="button" class="mt-2 mb-3 mx-3 btn btn-success">Go Back</button></a>
-            <form id="editForm" class="mx-3" enctype="multipart/form-data">
+            <form id="editProfileForm" class="mx-3" enctype="multipart/form-data">
                 <div class="row my-2">
                     <div class="col-3">
                         <label for="firstnameField" class="field-label">Firstname:</label>
-                        <input class="form-control" id="firstnameField" type="text" placeholder="{{profile['firstname']}}">
+                        <input class="form-control" id="firstnameField" type="text" placeholder="{{profile['firstname']}}" value="{{profile['firstname']}}">
                     </div>
                     <div class="col-3">
                         <label for="lastnameField" class="field-label">Firstname:</label>
-                        <input class="form-control" id="lastnameField" type="text" placeholder="{{profile['lastname']}}">
+                        <input class="form-control" id="lastnameField" type="text" placeholder="{{profile['lastname']}}" value="{{profile['lastname']}}">
                     </div>
                     <div class="col">
                         <label for="bioField" class="field-label">Enter Profile Bio:</label>
-                        <input class="form-control" id="lastnameField" type="text" placeholder="{{profile['profile_bio']}}">
+                        <input class="form-control" id="bioField" type="text" placeholder="{{profile['profile_bio']}}" value="{{profile['profile_bio']}}">
                     </div>
                 </div>
                 <div class="row my-2">

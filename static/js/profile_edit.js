@@ -1,3 +1,8 @@
+var editPageData = document.getElementById("profileDataDiv");
+
+var profileType = editPageData.getAttribute("data-profile-type");
+
+
 function updateWorkExperience(expUUID, title, cmpy_name, sector, descr, start, end, check) {
     console.log('calling');
     var job_title = title.value;
@@ -105,12 +110,50 @@ function deleteWorkExperience(expUUID) {
     })
 }
 
+function saveAll() {
+    if (profileType == "user")
+    {
+        var profileID = editPageData.getAttribute("data-profile-id");
+        var profileData = new FormData();
+        profileData.append('profile_id', profileID);
+        profileData.append('firstname', document.getElementById('firstnameField').value)
+        profileData.append('lastname', document.getElementById('lastnameField').value)
+        profileData.append('profile_bio', document.getElementById('bioField').value)
+        if (document.getElementById('profileUpload')) {
+            var profile = document.getElementById('profileUpload');
+            if (profile.files.length > 0) {
+                console.log('profile');
+                profileData.append('profile_picture', profile.files[0]);
+            }
+        }
+        if (document.getElementById('bannerUpload')) {
+            var banner = document.getElementById('bannerUpload');
+            if (banner.files.length > 0) {
+                console.log('profile');
+                profileData.append('profile_banner', banner.files[0]);
+            }
+        }
+        
+        fetch('/updateProfile', {
+            method: 'POST',
+            body: profileData,
+        })
+        .then(response => {
+            if (!response.ok)
+            {
+                throw new Error("Failure in main profile Update")
+            }
+            return response.json();
+        })
+        .then(response => {
+            if ('redirect' in response) {
+                window.location.href = response.redirect;
+            }
+        })
+    }
+}
+
 console.log("test");
-var editPageData = document.getElementById("profileDataDiv");
-
-var profileType = editPageData.getAttribute("data-profile-type");
-
-console.log(profileType);
 
 if (profileType == "user")
 {

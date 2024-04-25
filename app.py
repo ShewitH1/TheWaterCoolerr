@@ -1,6 +1,7 @@
 from flask import Flask, abort, redirect, render_template, request, session, jsonify, url_for
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
+import os
 
 from repositories import profile_repository, job_repository
 
@@ -54,7 +55,6 @@ def login():
 @app.route('/signup', methods=['GET','POST'])
 def signup():
     if request.method == 'POST':
-        print(request.form)
         payload_tag = request.form.get('payload_tag')
         if payload_tag == 'basic':
             if request.form.get('profile_type') == 'user':
@@ -177,6 +177,61 @@ def editProfile():
             return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
         else:
             return jsonify({'message':'edit authentication failed'})
+
+@app.route('/updateProfile', methods=['POST'])
+def updateProfile():
+    if request.method == 'POST':
+        user_id = request.form.get('profile_id')
+        firstname = None
+        lastname = None
+        user_bio = None
+        user_profile = None
+        user_banner = None
+        if 'firstname' in request.form:
+            firstname = request.form.get('firstname')
+            profile_repository.update_profile_firstname(user_id, firstname)
+        if 'lastname' in request.form:
+            lastname = request.form.get('lastname')
+            profile_repository.update_profile_firstname(user_id, lastname)
+        if 'profile_bio' in request.form:
+            user_bio = request.form.get('profile_bio')
+            profile_repository.update_profile_bio('user', user_id, user_bio)
+        if 'profile_picture' in request.files:
+            newProfile = request.files['profile_picture']
+            user_profile, link = findFileName(newProfile)
+            newProfile.save(user_profile)
+            profile_repository.update_profile_image('user', user_id, link)
+        if 'profile_banner' in request.files:
+            newBanner = request.files['profile_banner']
+            user_banner, link = findFileName(newBanner)
+            newBanner.save(user_banner)
+            profile_repository.update_profile_banner('user', user_id, link)
+        return jsonify({"message":"profile successfully updated!", "redirect":"/profile?profileType=user&id=" + user_id})
+
+def findFileName(file):
+    filename = file.filename.rsplit('.', 1)[0]
+    fileType = file.filename.rsplit('.', 1)[1]
+    filename = filename[:-1]
+    if "png" == fileType or "PNG" == fileType:
+        filetype = ".png" 
+    if "jpg" == fileType or "JPG" == fileType:
+        filetype = ".jpg"
+    extension = 'static/img/users/'
+    savePath = extension + filename + filetype
+    i = 0
+    if (os.path.exists(savePath)):
+        while os.path.exists(savePath):
+            savePath = extension + filename + "_" + str(i) + filetype
+            i+=1
+        print(savePath)
+        accessPath = savePath[7:]
+        print(accessPath)
+        return savePath, accessPath
+    else:
+        print(savePath)
+        accessPath = savePath[7:]
+        print(accessPath)
+        return savePath, accessPath
 
 @app.route('/addWorkExperience', methods=['POST'])
 def addWork():

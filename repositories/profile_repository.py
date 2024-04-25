@@ -151,6 +151,59 @@ def create_new_company_profile(company_id, company_login, password, company_name
             pool.putconn(conn)
 
 # Update Methods
+def update_profile_firstname(profile_id=None, firstname=None):
+    if profile_id is None or firstname is None:
+        return None
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                if (check_id_pair_exists("user", profile_id, conn)):
+                    cursor.execute('''
+                                        UPDATE
+                                            user_account
+                                        SET
+                                            firstname = %s
+                                        WHERE
+                                            profile_id = %s
+                                        ''', (firstname, profile_id))
+                    conn.commit()
+                else:
+                    return None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
+
+def update_profile_lastname(profile_id=None, lastname=None):
+    if profile_id is None or lastname is None:
+        return None
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                if (check_id_pair_exists("user", profile_id, conn)):
+                    cursor.execute('''
+                                        UPDATE
+                                            user_account
+                                        SET
+                                            lastname = %s
+                                        WHERE
+                                            profile_id = %s
+                                        ''', (lastname, profile_id))
+                    conn.commit()
+                else:
+                    return None
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if conn is not None:
+            pool.putconn(conn)
 
 def update_profile_bio(profile_type=None, profile_id=None, profile_bio=None):
     if profile_type is None or profile_id is None:
