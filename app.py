@@ -2,7 +2,7 @@ from flask import Flask, abort, redirect, render_template, request, session, jso
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 
-from repositories import profile_repository, job_repository, application_repository
+from repositories import profile_repository, job_repository
 
 load_dotenv()
 
@@ -161,15 +161,11 @@ def signupUser():
 # Posts the jobs to the job posting page
 @app.get('/job_search.html')
 def job_search():
-    job_title = request.args.get('job_title')
-    posting_date = request.args.get('posting_date')
-    description = request.args.get('description')
-    salary = request.args.get('salary')
-    company_id = request.args.get('company_id')
-    job_postings = job_repository.search_job_posting(job_title, posting_date, description, salary, company_id)
-    if job_postings is False:
-        job_postings = []
-    return render_template('job_search.html', job_postings=job_postings)
+    posting_id = request.args.get('posting_id')
+    job_posting = job_repository.get_job_posting_for_table(posting_id)
+    if not job_posting:
+        job_posting = []
+    return render_template('job_search.html', job_posting=job_posting)
 
 # Creates a new job posting
 @app.post('/create_job_posting')
@@ -219,7 +215,6 @@ def search_job_posting_route():
     if job_postings is False:
         abort(500, description="Error searching job postings")
     return render_template('job_search.html', job_postings=job_postings)
-
 @app.get('/job_listing.html')
 def job_listing():
     return render_template('job_listing.html')
