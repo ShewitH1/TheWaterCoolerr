@@ -23,7 +23,90 @@
             </div>
         </div>
         <div class="container-fluid bg-dark p-1 rounded profile-body-container">
-
+            <div class="mx-3 mt-3">
+                <h3 class="text-light mb-3 text-decoration-underline">Work Experience:</h1>
+                {% set months = {
+                    "01":"Jan", "02":"Feb", "03":"Mar",
+                    "04":"Apr", "05":"May", "06":"Jun",
+                    "07":"Jul", "08":"Aug", "09":"Sep",
+                    "10":"Oct", "11":"Nov", "12":"Dec"
+                } %}
+                {% if work %}
+                    {% for exp in work %}
+                        {% if exp['job_title'] != None %}
+                            {% if exp['company_name'] != None %}
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h4 class="text-light fw-bold element-header" style="display: inline-block;">{{ exp['job_title'] }}</h4>
+                                        <h4 class="text-light element-header" style="display: inline-block;"> | </h4>
+                                        <h4 class="text-light fw-light element-header" style="display: inline-block;">{% if exp['job_sector'] == "Job Sectors" %}{% else %}{{ exp['job_sector'] }}{% endif %}</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        {% set start_str = exp['start_date'] %}
+                                        {% set start_parts = start_str.split('-') %}
+                                        {% set start_formatted = months[start_parts[1]] ~ ' ' ~ start_parts[0] %}
+                                        {% if exp['end_date'] != "Present" %}
+                                            {% set end_str = exp['end_date'] %}
+                                            {% set end_parts = end_str.split('-') %}
+                                            {% set end_formatted = months[end_parts[1]] ~ ' ' ~ end_parts[0] %}
+                                            <h4 class="text-light text-end element-header">{{ start_formatted }} - {{ end_formatted }}</h4>
+                                        {% else %}
+                                            <h4 class="text-light text-end element-header">{{ start_formatted }} - {{exp['end_date']}}</h4>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <h4 class="text-light fst-italic element-header">{{ exp['company_name'] }}</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h6 class="text-light element-description">{{ exp['description'] }}</h6>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="mx-3">
+                <h3 class="text-light text-decoration-underline">Education Experience:</h1>
+                {% if education %}
+                    {% for exp in education %}
+                        {% if exp['institution_name'] != None %}
+                            {% if exp['education_level'] != None %}
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h4 class="text-light fw-bold element-header" style="display: inline-block;">{{ exp['institution_name'] }}</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        {% set start_str = exp['start_date'] %}
+                                        {% set start_parts = start_str.split('-') %}
+                                        {% set start_formatted = months[start_parts[1]] ~ ' ' ~ start_parts[0] %}
+                                        {% if exp['end_date'] != "Present" %}
+                                            {% set end_str = exp['end_date'] %}
+                                            {% set end_parts = end_str.split('-') %}
+                                            {% set end_formatted = months[end_parts[1]] ~ ' ' ~ end_parts[0] %}
+                                            <h4 class="text-light text-end element-header">{{ start_formatted }} - {{ end_formatted }}</h4>
+                                        {% else %}
+                                            <h4 class="text-light text-end element-header">{{ start_formatted }} - {{exp['end_date']}}</h4>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h4 class="text-light fst-italic element-header" style="display: inline-block;">{{ exp['education_level'] }}</h4>
+                                        <h4 class="text-light fst-italic element-header" style="display: inline-block;"> - </h4>
+                                        <h4 class="text-light fst-italic element-header" style="display: inline-block;">{{ exp['study_area'] }}</h4>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div style="margin-bottom: 50px;"></div>
         </div>
     </div>
 {% else %}

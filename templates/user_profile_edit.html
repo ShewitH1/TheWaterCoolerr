@@ -17,7 +17,7 @@
                         <input class="form-control" id="firstnameField" type="text" placeholder="{{profile['firstname']}}" value="{{profile['firstname']}}">
                     </div>
                     <div class="col-3">
-                        <label for="lastnameField" class="field-label">Firstname:</label>
+                        <label for="lastnameField" class="field-label">Lastname:</label>
                         <input class="form-control" id="lastnameField" type="text" placeholder="{{profile['lastname']}}" value="{{profile['lastname']}}">
                     </div>
                     <div class="col">
@@ -51,12 +51,12 @@
                                 </div>
                                 <div class="col-4">
                                     <label for="companyField" class="field-label">Company Name:</label>
-                                    <input class="form-control" id="companyField" type="text" placeholder="{{exp['company_name']}}" value="{{exp['company_name']}}">
+                                    <input class="form-control" id="companyField" type="text" {% if exp['company_name'] == None %} placeholder="" value="" {% else %} placeholder="{{exp['company_name']}}" value="{{exp['company_name']}}" {% endif %}>
                                 </div>
                                 <div class="col-4">
                                     <label for="sectorSelect" class="field-label">Job Sector (Optional)</label>
                                     <select class="form-select" id="sectorSelect" aria-label="Default select example">
-                                        <option selected>{{exp['job_sector']}}</option>
+                                        <option selected>{% if exp['job_sector'] == None %}Job Sectors{% else %}{{exp['job_sector']}}{% endif %}</option>
                                         {% if sectors %}
                                             {% for value in sectors %}
                                             <option value="{{value}}"">{{value}}</option>
@@ -68,7 +68,7 @@
                             <div class="row my-2">
                                 <div class="col">
                                     <label for="descField" class="field-label">Enter Brief Job Description:</label>
-                                    <textarea class="form-control" id="descField" type="text">{{exp['description']}}</textarea>
+                                    <textarea class="form-control" id="descField" type="text">{% if exp['description'] == None %}{% else %}{{exp['description']}}{% endif %}</textarea>
                                 </div>
                             </div>
                             <div class="row my-2">
@@ -88,7 +88,7 @@
                                 </div>
                             </div>
                             <div>
-                                <button type="button" id="save{{exp['work_experience_id']}}Button" class="btn btn-success mt-2 mb-2" onclick="updateWorkExperience('{{exp['work_experience_id']}}', titleField, companyField, sectorSelect, descField, startDate, endDate, waterCoolerCheck)">Save Experience</button>
+                                <button type="button" id="save{{exp['work_experience_id']}}Button" class="btn btn-success mt-2 mb-2" onclick="updateWorkExperience('{{exp['work_experience_id']}}', titleField, companyField, sectorSelect, descField, startDate, endDate, waterCoolerCheck, 'singleUpdate')">Save Experience</button>
                                 <button type="button" id="delete{{exp['work_experience_id']}}Button" class="btn btn-danger mt-2 mb-2" onclick="deleteWorkExperience('{{exp['work_experience_id']}}')">Delete</button>
                             </div>
                         </form>
@@ -98,6 +98,48 @@
                 <button id="addWorkButton" type="button" class="mt-2 mb-2 btn btn-success">Add Work Experience</button>
                 <div id="educationExperienceContainer">    
                     <label for="educationExperienceContainer" class="field-label">Education Experience:</label>
+                    {% if education %}
+                        {% for exp in education %}
+                            <form id="eduExpForm{{exp['education_experience_id']}}" class="mx-3">
+                                <div id="alert-div"></div>
+                                <div class="row my-2">
+                                    <div class="col-4">
+                                        <label for="institutionField" class="field-label">Institution Name:</label>
+                                        <input class="form-control" id="institutionField" type="text" {% if exp['institution_name'] == None %} placeholder="" value="" {% else %} placeholder="{{exp['institution_name']}}" value="{{exp['institution_name']}}" {% endif %}>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="educationSelect" class="field-label">Education Level:</label>
+                                        <select class="form-select" id="educationSelect" aria-label="Default select example">
+                                            <option selected>{{exp['education_level']}}</option>
+                                            {% if levels %}
+                                                {% for value in levels %}
+                                                    <option value="{{value}}"">{{value}}</option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="areaField" class="field-label">Area of Study:</label>
+                                        <input class="form-control" id="areaField" type="text" placeholder="{{exp['study_area']}}" value="{{exp['study_area']}}">
+                                    </div>
+                                </div>
+                                <div class="row my-2">
+                                    <div class="col-6">
+                                        <label for="startDate" class="field-label">Position Start Date:</label>
+                                        <input type="date" class="form-control" id="startDate" name="startDate" max=${formattedDate} min="1940-00-00" value="{{exp['start_date']}}">
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="endDate" class="field-label">Position End Date (if applicable):</label>
+                                        <input type="date" class="form-control" id="endDate" name="endDate" max=${formattedDate} min="1940-00-00">
+                                    </div>
+                                </div>
+                                <div>
+                                    <button type="button" id="save{{exp['education_experience_id']}}Button" class="btn btn-success mt-2 mb-2" onclick="updateEducationExperience('{{exp['education_experience_id']}}', institutionField, educationSelect, areaField, startDate, endDate)">Save Experience</button>
+                                    <button type="button" id="delete{{exp['education_experience_id']}}Button" class="btn btn-danger mt-2 mb-2" onclick="deleteEducationExperience('{{exp['education_experience_id']}}')">Delete</button>
+                                </div>
+                            </form>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <button id="addEducationButton" type="button" class="mt-2 mb-2 btn btn-success">Add Education Experience</button>
                 <div>

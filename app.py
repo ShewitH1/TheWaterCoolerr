@@ -1,6 +1,7 @@
 from flask import Flask, abort, redirect, render_template, request, session, jsonify, url_for
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
+from datetime import datetime, date
 import os
 
 from repositories import profile_repository, job_repository, application_repository
@@ -132,7 +133,6 @@ def logout():
 
 @app.route('/profile', methods=['GET'])
 def profile():
-
     # Session & Page Variable Tracking
     sessionProfile = None
     if 'sessionProfile' in session:
@@ -140,6 +140,7 @@ def profile():
         session['next'] = request.url
     else:
         session['next'] = request.url
+    
     profileType = request.args.get('profileType')
     print(profileType)
     profileId = request.args.get('id')
@@ -147,10 +148,8 @@ def profile():
     if profileType == 'user':
         profile = profile_repository.get_user_profile_by_id(profileId)
         work = profile_repository.get_all_workplace_experience_by_profile(profileId)
-        print(profile)
-        print(sessionProfile)
-        print(work)
-        return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile, work=work)
+        education = profile_repository.get_all_education_experience_by_profile(profileId)
+        return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile, work=work, education=education)
     elif profileType == 'company':
         profile = profile_repository.get_company_profile_by_id(profileId)
     else:
@@ -171,8 +170,10 @@ def editProfile():
         if sessionProfile['profile_id'] == editProfileID:
             editProfileData = profile_repository.get_user_profile_by_id(editProfileID)
             work = profile_repository.get_all_workplace_experience_by_profile(editProfileID)
+            education = profile_repository.get_all_education_experience_by_profile(editProfileID)
             sectors = ["Information Technology", "Sales", "Marketing", "Construction", "Manufacturing", "Healthcare", "First Responder"]
-            htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile, work=work, sectors=sectors)
+            levels = ["Certification", "GED", "Bachelors", "Masters", "PhD"]
+            htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile, work=work, education=education, sectors=sectors, levels=levels)
             return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
         else:
             return jsonify({'message':'edit authentication failed'})
@@ -188,10 +189,12 @@ def updateProfile():
         user_banner = None
         if 'firstname' in request.form:
             firstname = request.form.get('firstname')
+            print(firstname)
             profile_repository.update_profile_firstname(user_id, firstname)
         if 'lastname' in request.form:
             lastname = request.form.get('lastname')
-            profile_repository.update_profile_firstname(user_id, lastname)
+            print(lastname)
+            profile_repository.update_profile_lastname(user_id, lastname)
         if 'profile_bio' in request.form:
             user_bio = request.form.get('profile_bio')
             profile_repository.update_profile_bio('user', user_id, user_bio)
@@ -237,7 +240,6 @@ def addWork():
     if request.method == 'POST':
         data = request.json
         profileID = data.get('profile_id')
-        print(profileID)
         new_work_id = profile_repository.create_new_workplace_experience(profileID)
         if new_work_id is not None:
             sectors = ["Information Technology", "Sales", "Marketing", "Construction", "Manufacturing", "Healthcare", "First Responder"]
@@ -255,18 +257,27 @@ def updateWork():
             return jsonify({'message':'Failed to update work experience, missing id', 'response':'failure-id'})
         title = data['job_title']
         print(title)
-        if title is '':
+        if title == '':
             return jsonify({'message':'Failed to update work experience, missing title', 'response':'failure-title'})
         cmpy_name = data['company_name']
-        if cmpy_name is '':
+        if cmpy_name == '':
             return jsonify({'message':'Failed to update work experience, missing company name', 'response':'failure-name'})
         sector = data['job_sector']
         start_date = data['start_date']
-        if start_date is '':
-            return jsonify({'message':'Failed to update work experience, missing start-date', 'response':'failure-date'})
+        curr_date = date.today()
+        if start_date == '':
+            return jsonify({'message':'Failed to update education experience, missing start-date', 'response':'failure-date'})
+        else:
+            logic_start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            if logic_start_date > curr_date:
+                return jsonify({'message':'Failed to update education exeprience, invalid start-date (start date cannot be greater than current date)', 'response':'failure-greater-date'})
         end_date = data['end_date']
-        if end_date is '':
+        if end_date == '':
             end_date = "Present"
+        else:
+            logic_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+            if logic_end_date > curr_date:
+                return jsonify({'message':'Failed to update work experience, invalid end-date (end date cannot be greater than current date)', 'response':'failure-greater-date-end'})
         description = data['description']
         water_cooler = data['waterCooler']
         if water_cooler == "true":
@@ -292,6 +303,69 @@ def deleteWork():
         status = profile_repository.delete_work_experience_by_id(exp_id)
         if status == 1:
             return jsonify({'message':'Successfully deleted work experience', 'response':'success'})
+        
+@app.route('/addEducationExperience', methods=['POST'])
+def addEducation():
+    if request.method == 'POST':
+        data = request.json
+        profileID = data.get('profile_id')
+        new_edu_id = profile_repository.create_new_education_experience(profileID)
+        if new_edu_id is not None:
+            levels = ["Certification", "GED", "Bachelors", "Masters", "PhD"]
+            return jsonify({'message':'new work experience id created','eduExpID':new_edu_id, 'levels':levels})
+        else:
+            return jsonify({'message':'failed to create new workplace ID'})
+
+@app.route('/updateEducationExperience', methods=['POST'])
+def updateEducation():
+    if request.method == 'POST':
+        data = request.json
+        print(data)
+        exp_id = data['education_experience_id']
+        if exp_id is None:
+            return jsonify({'message':'Failed to update education experience, missing id', 'response':'failure-id'})
+        institution = data['institution_name']
+        print(institution)
+        if institution == '':
+            return jsonify({'message':'Failed to update education experience, missing institution name', 'response':'failure-inst'})
+        level = data['education_level']
+        if level == '':
+            return jsonify({'message':'Failed to update education experience, missing education level', 'response':'failure-level'})
+        area = data['study_area']
+        start_date = data['start_date']
+        curr_date = date.today()
+        if start_date == '':
+            return jsonify({'message':'Failed to update education experience, missing start-date', 'response':'failure-date'})
+        else:
+            logic_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+            if logic_date > curr_date:
+                return jsonify({'message':'Failed to update education exeprience, invalid start-date (start date cannot be greater than current date)', 'response':'failure-greater-date'})
+        end_date = data['end_date']
+        if end_date == '':
+            end_date = "Present"
+        else:
+            logic_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+            if logic_end_date > curr_date:
+                return jsonify({'message':'Failed to update work experience, invalid end-date (end date cannot be greater than current date)', 'response':'failure-greater-date-end'})
+        status = profile_repository.update_education_experience_by_id(exp_id, institution, level, area, start_date, end_date)
+        print(status)
+        if status == 1:
+            return jsonify({'message':'Updated work experience successfully!', 'response':'success'})
+        elif status == -1:
+            return jsonify({'message':'Failed to update work experience, missing title', 'response':'failure-title'})
+        elif status == -2:
+            return jsonify({'message':'Failed to update work experience, missing id', 'response':'failure-id'})
+
+@app.route('/deleteEducationExperience', methods=['POST'])
+def deleteEducation():
+    if request.method == 'POST':
+        data=request.json
+        exp_id = data['education_experience_id']
+        if exp_id is None:
+            return jsonify({'message':'Failed to delete education experience, missing id', 'response':'failure-id'})
+        status = profile_repository.delete_education_experience_by_id(exp_id)
+        if status == 1:
+            return jsonify({'message':'Successfully deleted education experience', 'response':'success'})
 
 # Posts the jobs to the job posting page
 @app.get('/job_search.html')

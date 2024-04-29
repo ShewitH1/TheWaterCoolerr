@@ -552,3 +552,118 @@ def delete_work_experience_by_id(exp_id):
     finally:
         if (conn is not None):
             pool.putconn(conn)
+
+# Education Experience Methods
+
+def create_new_education_experience(profile_id):
+    if profile_id is None:
+        return None
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                INSERT INTO education_experience(profile_id)
+                                VALUES (%s)
+                                RETURNING education_experience_id
+                                ''', [profile_id])
+                inserted_uuid = cursor.fetchone()['education_experience_id']
+                conn.commit()
+                return inserted_uuid
+    except Exception as e:
+        print("error creating new education experience")
+        print(e)
+        return None
+    finally:
+        if (conn is not None):
+            pool.putconn(conn)
+
+def update_education_experience_by_id(exp_id, inst_name, edu_level, stu_area, start_date, end_date):
+    if exp_id is None:
+        return -5
+    if inst_name is None:
+        return -4
+    if edu_level is None: 
+        return -3
+    if start_date is None:
+        return -2
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                UPDATE 
+                                    education_experience
+                                SET
+                                    institution_name = %s,
+                                    education_level = %s,
+                                    study_area = %s,
+                                    start_date = %s,
+                                    end_date = %s
+                                WHERE
+                                    education_experience_id = %s
+                                ''', (inst_name, edu_level, stu_area, start_date, end_date, exp_id))
+                conn.commit()
+                return 1
+    except Exception as e:
+        print("Failed to update workplace experience with id ", exp_id)
+        print(e)
+        return -1
+    finally:
+        if (conn is not None):
+            pool.putconn(conn)
+
+
+def get_all_education_experience_by_profile(profile_id):
+    if profile_id is None:
+        return None
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                SELECT
+                                    education_experience_id,
+                                    profile_id,
+                                    institution_name,
+                                    education_level,
+                                    study_area,
+                                    start_date,
+                                    end_date
+                                FROM
+                                    education_experience
+                                WHERE profile_id = %s
+                                ''', [profile_id])
+                return cursor.fetchall()
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if (conn is not None):
+            pool.putconn(conn)
+
+def delete_education_experience_by_id(exp_id):
+    if exp_id is None:
+        return -1
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.getconn() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute('''
+                                DELETE 
+                                FROM 
+                                    education_experience
+                                WHERE education_experience_id = %s
+                                ''', [exp_id])
+                conn.commit()
+                return 1
+    except Exception as e:
+        print(e)
+        return None
+    finally:
+        if (conn is not None):
+            pool.putconn(conn)

@@ -43,13 +43,14 @@ DROP TYPE IF EXISTS education_level;
 CREATE TYPE education_level AS ENUM('GED', 'Certification', 'Bachelors', 'Masters', 'PhD');
 
 CREATE TABLE IF NOT EXISTS education_experience (
-    profile_id VARCHAR(16) NOT NULL,
-    institution_name VARCHAR(128) NOT NULL,
-    education_level education_level NOT NULL,
-    study_area VARCHAR(64) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    PRIMARY KEY (profile_id),
+    education_experience_id UUID DEFAULT uuid_generate_v4 (),
+    profile_id VARCHAR(16),
+    institution_name VARCHAR(128),
+    education_level VARCHAR(32),
+    study_area VARCHAR(64),
+    start_date VARCHAR(10),
+    end_date VARCHAR(10),
+    PRIMARY KEY (education_experience_id),
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
