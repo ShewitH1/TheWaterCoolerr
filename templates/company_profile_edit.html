@@ -1,0 +1,76 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
+<link href="{{ url_for('static', filename='css/profile_edit.css')}}" rel="stylesheet">
+<script src="{{ url_for('static', filename='js/profile_edit.js') }}"></script>
+{% if profile %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <div class="container-fluid bg-dark p-1 rounded" style="width: 95%; min-height:100vh; height:auto;">
+            {% if profile['company_id'] %}
+            <div id="profileDataDiv" data-profile-type="company" data-profile-id="{{profile['company_id']}}"></div>
+            <a href="/profile?profileType=company&id={{ profile['company_id'] }}"><button type=button"" class="mt-2 mb-3 mx-2 btn btn-success">Go Back</button></a>
+            <form id="editProfileForm" class="mx-3" enctype="multipart/form-data">
+                <div class="row my-2">
+                    <div class="col-3">
+                        <label for="nameField" class="field-label">Company Name:</label>
+                        <input class="form-control" id="nameField" type="text" placeholder="{{profile['name']}}" value="{{profile['name']}}">
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col">
+                        <label for="aboutField" class="field-label">Enter 'About the Company' Section:</label>
+                        <textarea class="form-control" id="aboutField" type="text" rows="5" {% if profile['company_bio'] == None %} {% else %} placeholder="{{profile['company_bio']}}" {% endif %}>{% if profile['company_bio'] == None %} {% else %} {{profile['company_bio']}} {% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <label for="profileUpload" class="field-label">Upload profile picture, best fit will be 1:1 aspect ratio</label>
+                    <input type="file" class="form-control-file" id="profileUpload" name="newProfile" accept="image/*">
+                </div>
+                <div class="row my-2">
+                    <label for="bannerUpload" class="field-label">Upload profile banner, best fit will be 3:1 aspect ratio</label>
+                    <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
+                </div>
+                <div class="row my-2">
+                    <div class="col-4">
+                        <label for="aboutIMG1" class="field-label">About Image #1</label>
+                    </div>
+                    <div class="col-4">
+                        <label for="aboutIMG2" class="field-label">About Image #2</label>
+                    </div>
+                    <div class="col-4">
+                        <label for="aboutIMG3" class="field-label">About Image #3</label>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <div class="col-4">
+                        <input type="file" class="form-control-file" id="aboutIMG1" name="newAbout1" accept="image/*">
+                    </div>
+                    <div class="col-4">
+                        <input type="file" class="form-control-file" id="aboutIMG2" name="newAbout2" accept="image/*">
+                    </div>
+                    <div class="col-4">
+                        <input type="file" class="form-control-file" id="aboutIMG3" name="newAbout3" accept="image/*">
+                    </div>
+                </div>
+                
+                <!-- <div>
+                    <button type="button" display="hidden" id="submitButton" class="btn btn-success mt-2 mb-2">Save Profile Info</button>
+                </div> -->
+            </form>
+                <div class="mx-3">
+                    <button id="saveAll" type="button" class="mt-2 mb-2 btn btn-success" onclick="saveAll()">Save All</button>
+                </div>  
+            </div>
+            {% else %}
+        
+            {% endif %}
+        </div>
+    </div>
+{% else %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">Oops! Something went wrong :(</h1>
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">It seems like you searched an invalid profile ID.</h1>
+    </div>
+{% endif %}
+{% endblock %}

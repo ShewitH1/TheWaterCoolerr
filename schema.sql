@@ -20,7 +20,10 @@ CREATE TABLE IF NOT EXISTS company_account (
     name VARCHAR(64) UNIQUE NOT NULL,
     company_image VARCHAR(255),
     company_banner VARCHAR(255),
-    company_bio VARCHAR(128),
+    about_img_1 VARCHAR(255),
+    about_img_2 VARCHAR(255),
+    about_img_3 VARCHAR(255),
+    company_bio TEXT,
     is_auth BOOLEAN,
     PRIMARY KEY (company_id)
 );

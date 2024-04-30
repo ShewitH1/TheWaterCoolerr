@@ -6,6 +6,7 @@ import json
 def get_job_posting_for_table(posting_id):
     if posting_id is None:
         return False
+    conn = None
     pool = get_pool()
     try:
         with pool.connection() as conn:
@@ -29,9 +30,10 @@ def get_job_posting_for_table(posting_id):
         return False
     finally:
         if conn is not None:
-            poll.putconn(conn)
+            pool.putconn(conn)
 
 def create_job_posting(job_title, posting_date, description, salary, company_id):
+    conn = None
     pool = get_pool()
     try:
         with pool.connection() as conn:
@@ -47,9 +49,10 @@ def create_job_posting(job_title, posting_date, description, salary, company_id)
         return False
     finally:
         if conn is not None:
-            poll.putconn(conn)
+            pool.putconn(conn)
 
 def update_job_posting(posting_id, job_title, posting_date, description, salary, company_id):
+    conn = None
     pool = get_pool()
     try:
         with pool.connection() as conn:
@@ -65,9 +68,10 @@ def update_job_posting(posting_id, job_title, posting_date, description, salary,
         return False
     finally:
         if conn is not None:
-            poll.putconn(conn)
+            pool.putconn(conn)
 
 def search_job_posting(job_title, posting_date, description, salary, company_id):
+    conn = None
     pool = get_pool()
     try:
         with pool.connection() as conn:
@@ -96,9 +100,10 @@ def search_job_posting(job_title, posting_date, description, salary, company_id)
         return False
     finally:
         if conn is not None:
-            poll.putconn(conn)
+            pool.putconn(conn)
 
 def delete_job_posting(posting_id):
+    conn = None
     pool = get_pool()
     try:
         with pool.connection() as conn:
@@ -113,5 +118,5 @@ def delete_job_posting(posting_id):
         return False
     finally:
         if conn is not None:
-            poll.putconn(conn)
+            pool.putconn(conn)
 

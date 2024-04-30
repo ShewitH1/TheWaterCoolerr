@@ -2,6 +2,8 @@ var editPageData = document.getElementById("profileDataDiv");
 
 var profileType = editPageData.getAttribute("data-profile-type");
 
+var profileID = editPageData.getAttribute("data-profile-id")
+
 
 function updateWorkExperience(expUUID, title, cmpy_name, sector, descr, start, end, check, requestType) {
     if (requestType == "saveAll") {
@@ -263,20 +265,21 @@ function deleteEducationExperience(expUUID) {
 function saveAll() {
     if (profileType == "user")
     {
-        var profileID = editPageData.getAttribute("data-profile-id");
+        //var profileID = editPageData.getAttribute("data-profile-id");
         var profileData = new FormData();
+        profileData.append('type', profileType);
         profileData.append('profile_id', profileID);
         profileData.append('firstname', document.getElementById('firstnameField').value)
         profileData.append('lastname', document.getElementById('lastnameField').value)
         profileData.append('profile_bio', document.getElementById('bioField').value)
-        if (document.getElementById('profileUpload')) {
-            var profile = document.getElementById('profileUpload');
+        var profile = document.getElementById('profileUpload')
+        if (profile) {
             if (profile.files.length > 0) {
                 profileData.append('profile_picture', profile.files[0]);
             }
         }
-        if (document.getElementById('bannerUpload')) {
-            var banner = document.getElementById('bannerUpload');
+        var banner = document.getElementById('bannerUpload')
+        if (banner) {
             if (banner.files.length > 0) {
                 profileData.append('profile_banner', banner.files[0]);
             }
@@ -312,7 +315,7 @@ function saveAll() {
         
         fetch('/updateProfile', {
             method: 'POST',
-            body: profileData,
+            body: profileData
         })
         .then(response => {
             if (!response.ok)
@@ -327,12 +330,69 @@ function saveAll() {
             }
         })
     }
+    if (profileType == "company")
+    {
+        //var profileID = editPageData.getAttribute("data-profile-id");
+        var profileData = new FormData();
+        profileData.append('type', profileType);
+        profileData.append('profile_id', profileID);
+        profileData.append('name', document.getElementById('nameField').value);
+        console.log(document.getElementById('aboutField').value);
+        profileData.append('company_bio', document.getElementById('aboutField').value);
+        var profile = document.getElementById('profileUpload');
+        if (profile) {
+            if (profile.files.length > 0) {
+                profileData.append('company_image', profile.files[0]);
+            }
+        }
+        var banner = document.getElementById('profileBanner');
+        if (banner) {
+            if (banner.files.length > 0) {
+                profileData.append('company_banner', banner.files[0]);
+            }
+        }
+        var aboutIMG1 = document.getElementById('aboutIMG1');
+        if (aboutIMG1) {
+            if (aboutIMG1.files.length > 0) {
+                profileData.append('about_img_1', aboutIMG1.files[0]);
+            }
+        }
+        var aboutIMG2 = document.getElementById('aboutIMG1');
+        if (aboutIMG2) {
+            if (aboutIMG2.files.length > 0) {
+                profileData.append('about_img_1', aboutIMG2.files[0]);
+            }
+        }
+        var aboutIMG3 = document.getElementById('aboutIMG1');
+        if (aboutIMG3) {
+            if (aboutIMG3.files.length > 0) {
+                profileData.append('about_img_1', aboutIMG3.files[0]);
+            }
+        }
+        fetch('/updateProfile', {
+            method: 'POST',
+            body: profileData
+        })
+        .then(response => {
+            if (!response.ok)
+            {
+                throw new Error("Failure in company profile update")
+            }
+            return response.json();
+        })
+        .then(response => {
+            console.log(response.message);
+            if ('redirect' in response) {
+                window.location.href = response.redirect;
+            }
+        })
+    }
 }
 
 
 if (profileType == "user")
 {
-    var profileID = editPageData.getAttribute("data-profile-id");
+    //var profileID = editPageData.getAttribute("data-profile-id");
     var profileIDRequestData = {
         profile_id : profileID
     }
@@ -485,11 +545,6 @@ if (profileType == "user")
             }
         })
     })
-}
-
-if (profileType == "company")
-{
-
 }
 
 

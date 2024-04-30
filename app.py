@@ -36,17 +36,23 @@ def login():
         print(username)
         password = request.form.get("password")
         print(password)
-        account_record = profile_repository.get_user_by_login(username)
-        print(account_record)
-        if account_record is not None:
-            if not bcrypt.check_password_hash(account_record['hashed_password'], password):
+        user_record = profile_repository.get_user_by_login(username)
+        company_record = profile_repository.get_company_by_login(username)
+        if user_record is not None:
+            if not bcrypt.check_password_hash(user_record['hashed_password'], password):
                 return redirect('/login')
-            
             session['sessionProfile'] = profile_repository.get_user_by_login(username)
-            session['password'] = password
             session['type'] = 'user'  # Set session type here
-
-
+            if session['next'] is not None:
+                return redirect(session['next'])
+            else:
+                return index()
+        elif company_record is not None:
+            if not bcrypt.check_password_hash(company_record['hashed_password'], password):
+                return redirect('/login')
+            session['sessionProfile'] = profile_repository.get_company_profile_by_id(company_record['company_id'])
+            print(session['sessionProfile'])
+            session['type'] = 'company'
             if session['next'] is not None:
                 return redirect(session['next'])
             else:
@@ -69,7 +75,7 @@ def signup():
                 firstname = request.form.get('firstname')
                 lastname = request.form.get('lastname')
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                profile_repository.create_new_user_profile(user_id, user_email, hashed_password, firstname, lastname)
+                create_status = profile_repository.create_new_user_profile(user_id, user_email, hashed_password, firstname, lastname)
                 return jsonify({'message':'new user profile created successfully', 'user_id':user_id});
             elif request.form.get('profile_type') == 'company':
                 company_id = request.form.get('company_id')
@@ -77,7 +83,7 @@ def signup():
                 password = request.form.get('pass')
                 company_name = request.form.get('company_name')
                 hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-                profile_repository.create_new_company_profile(company_id, company_login, hashed_password, company_name)
+                create_status = profile_repository.create_new_company_profile(company_id, company_login, hashed_password, company_name)
                 return jsonify({'message':'new user profile created successfully', 'company_id':company_id});
             else:
                 return jsonify({'message':'failed to create new profile'})
@@ -152,6 +158,8 @@ def profile():
         return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile, work=work, education=education)
     elif profileType == 'company':
         profile = profile_repository.get_company_profile_by_id(profileId)
+        print(profile)
+        return render_template('company_profile.html', sessionProfile=sessionProfile, profile=profile)
     else:
         abort(400)
 
@@ -159,58 +167,158 @@ def profile():
 def editProfile():
     if request.method == 'POST':
         data = request.json
-        print(request)
         editProfileID = data.get('profile_id')
+        type = data.get('type')
         sessionProfile = None
         if 'sessionProfile' in session:
             sessionProfile = session['sessionProfile']
             session['next'] = request.url
         else:
             session['next'] = request.url
-        if sessionProfile['profile_id'] == editProfileID:
-            editProfileData = profile_repository.get_user_profile_by_id(editProfileID)
-            work = profile_repository.get_all_workplace_experience_by_profile(editProfileID)
-            education = profile_repository.get_all_education_experience_by_profile(editProfileID)
-            sectors = ["Information Technology", "Sales", "Marketing", "Construction", "Manufacturing", "Healthcare", "First Responder"]
-            levels = ["Certification", "GED", "Bachelors", "Masters", "PhD"]
-            htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile, work=work, education=education, sectors=sectors, levels=levels)
-            return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
-        else:
-            return jsonify({'message':'edit authentication failed'})
+        if type == 'user':
+            if sessionProfile['profile_id'] == editProfileID:
+                editProfileData = profile_repository.get_user_profile_by_id(editProfileID)
+                work = profile_repository.get_all_workplace_experience_by_profile(editProfileID)
+                education = profile_repository.get_all_education_experience_by_profile(editProfileID)
+                sectors = ["Information Technology", "Sales", "Marketing", "Construction", "Manufacturing", "Healthcare", "First Responder"]
+                levels = ["Certification", "GED", "Bachelors", "Masters", "PhD"]
+                htmlData=render_template("user_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile, work=work, education=education, sectors=sectors, levels=levels)
+                return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
+            else:
+                return jsonify({'message':'edit authentication failed'})
+        elif type == 'company':
+            if sessionProfile['company_id'] == editProfileID:
+                editProfileData = profile_repository.get_company_profile_by_id(editProfileID)
+                htmlData=render_template("company_profile_edit.html", profile=editProfileData, sessionProfile=sessionProfile)
+                return jsonify({'message':'extras added succesfully', 'html':htmlData, 'url':'editProfile'})
+            else:
+                return jsonify({'message':'edit authentication failed'})
 
 @app.route('/updateProfile', methods=['POST'])
 def updateProfile():
     if request.method == 'POST':
         user_id = request.form.get('profile_id')
-        firstname = None
-        lastname = None
-        user_bio = None
-        user_profile = None
-        user_banner = None
-        if 'firstname' in request.form:
-            firstname = request.form.get('firstname')
-            print(firstname)
-            profile_repository.update_profile_firstname(user_id, firstname)
-        if 'lastname' in request.form:
-            lastname = request.form.get('lastname')
-            print(lastname)
-            profile_repository.update_profile_lastname(user_id, lastname)
-        if 'profile_bio' in request.form:
-            user_bio = request.form.get('profile_bio')
-            profile_repository.update_profile_bio('user', user_id, user_bio)
-        if 'profile_picture' in request.files:
-            newProfile = request.files['profile_picture']
-            user_profile, link = findFileName(newProfile)
-            newProfile.save(user_profile)
-            profile_repository.update_profile_image('user', user_id, link)
-        if 'profile_banner' in request.files:
-            newBanner = request.files['profile_banner']
-            user_banner, link = findFileName(newBanner)
-            newBanner.save(user_banner)
-            profile_repository.update_profile_banner('user', user_id, link)
-        return jsonify({"message":"profile successfully updated!", "redirect":"/profile?profileType=user&id=" + user_id})
+        type = request.form.get('type')
+        print(user_id)
+        print(type)
+        if type == 'user':
+            record = profile_repository.get_user_profile_by_id(user_id)
+            if record is None:
+                return jsonify({"message":"Profile update failed, invalid ID"})
+            firstname = None
+            lastname = None
+            user_bio = None
+            user_profile = None
+            user_banner = None
+            if 'firstname' in request.form:
+                firstname = request.form.get('firstname')
+                print(firstname)
+                profile_repository.update_profile_firstname(user_id, firstname)
+            if 'lastname' in request.form:
+                lastname = request.form.get('lastname')
+                print(lastname)
+                profile_repository.update_profile_lastname(user_id, lastname)
+            if 'profile_bio' in request.form:
+                user_bio = request.form.get('profile_bio')
+                profile_repository.update_profile_bio('user', user_id, user_bio)
+            if 'profile_picture' in request.files:
+                newProfile = request.files['profile_picture']
+                user_profile, link = findUserFileName(newProfile)
+                old_profile_picture = 'static/' + record['profile_image']
+                if 'static/img/users/' in old_profile_picture:
+                    if os.path.exists(old_profile_picture):
+                        os.remove(old_profile_picture)
+                newProfile.save(user_profile)
+                profile_repository.update_profile_image(type, user_id, link)
+            if 'profile_banner' in request.files:
+                newBanner = request.files['profile_banner']
+                user_banner, link = findUserFileName(newBanner)
+                old_banner = 'static/' + record['profile_banner']
+                if 'static/img/users/' in old_banner:
+                    if os.path.exists(old_banner):
+                        os.remove(old_banner)
+                newBanner.save(user_banner)
+                profile_repository.update_profile_banner(type, user_id, link)
+            return jsonify({"message":"profile successfully updated!", "redirect":"/profile?profileType=user&id=" + user_id})
+        elif type == 'company':
+            record = profile_repository.get_company_profile_by_id(user_id)
+            print(record)
+            print(request.form.get('company_bio'))
+            if 'name' in request.form:
+                newName = request.form.get('name')
+                status = profile_repository.update_company_name(user_id, newName)
+                if status == -4:
+                    return jsonify({'message':'Failed to update company name, missing id', 'response':'failure-id'})
+                elif status == -3:
+                    return jsonify({'message':'Failed to update company name, missing name', 'response':'failure-name'})
+                elif status == -2:
+                    return jsonify({'message':'Failed to update company name, company id does not exist', 'response':'failure-id-exist'})
+                elif status == -1:
+                    return jsonify({'message':'Failed to update company name, database error', 'response':'failure-data'})
+            if 'company_bio' in request.form:
+                newBio = request.form.get('company_bio')
+                status = profile_repository.update_profile_bio(type, user_id, newBio)
+                if status == -4:
+                    return jsonify({'message':'Failed to update company bio, missing id', 'response':'failure-id'})
+                elif status == -3:
+                    return jsonify({'message':'Failed to update company bio, missing profile type', 'response':'failure-type'})
+                elif status == -2:
+                    return jsonify({'message':'Failed to update company bio, missing bio', 'response':'failure-bio'})
+                elif status == -5:
+                    return jsonify({'message':'Failed to update company bio, invalid profile type', 'response':'failure-type-invalid'})
+                elif status == -6:
+                    return jsonify({'message':'Failed to update company bio, company id does not exist', 'response':'failure-id-exists'})
+            if 'company_image' in request.files:
+                newImage = request.files['company_image']
+                company_image, link = findCompanyFileName(newImage)
+                old_profile_picture = 'static/' + record['company_image']
+                if 'static/img/company/' in old_profile_picture:
+                    if os.path.exists(old_profile_picture):
+                        os.remove(old_profile_picture)
+                newImage.save(company_image)
+                profile_repository.update_profile_image(type, user_id, link)
+            if 'company_banner' in request.files:
+                newBanner = request.files['company_banner']
+                company_banner, link = findCompanyFileName(newBanner)
+                old_banner_picture = 'static/' + record['company_banner']
+                if 'static/img/company/' in old_banner_picture:
+                    if os.path.exists(old_banner_picture):
+                        os.remove(old_banner_picture)
+                newBanner.save(company_banner)
+                profile_repository.update_profile_banner(type, user_id, link)
+            if 'about_img_1' in request.files:
+                newAboutIMG1 = request.files['about_img_1']
+                about_image_1, link = findCompanyFileName(newAboutIMG1)
+                old_about_image_1 = 'static/' + record['about_img_1']
+                if 'static/img/company/' in old_about_image_1:
+                    if os.path.exists(old_about_image_1):
+                        os.remove(old_about_image_1)
+                newAboutIMG1.save(about_image_1)
+                profile_repository.update_about_img(user_id, link)
+            if 'about_img_2' in request.files:
+                newAboutIMG2 = request.files['about_img_2']
+                about_image_2, link = findCompanyFileName(newAboutIMG2)
+                old_about_image_2 = 'static/' + record['about_img_1']
+                if 'static/img/company/' in old_about_image_2:
+                    if os.path.exists(old_about_image_2):
+                        os.remove(old_about_image_2)
+                newAboutIMG2.save(about_image_2)
+                profile_repository.update_about_img(user_id, link)
+            if 'about_img_3' in request.files:
+                newAboutIMG3 = request.files['about_img_3']
+                about_image_3, link = findCompanyFileName(newAboutIMG3)
+                old_about_image_3 = 'static/' + record['about_img_1']
+                if 'static/img/company/' in old_about_image_3:
+                    if os.path.exists(old_about_image_3):
+                        os.remove(old_about_image_3)
+                newAboutIMG3.save(about_image_3)
+                profile_repository.update_about_img(user_id, link)
+            print("I got here!")
+            return jsonify({"message":"profile successfully updated!", "redirect":"/profile?profileType=company&id=" + user_id})
+        else:
+            return jsonify({"message":"failure to update profile, invalid type."})
 
-def findFileName(file):
+def findUserFileName(file):
     filename = file.filename.rsplit('.', 1)[0]
     fileType = file.filename.rsplit('.', 1)[1]
     filename = filename[:-1]
@@ -219,6 +327,31 @@ def findFileName(file):
     if "jpg" == fileType or "JPG" == fileType:
         filetype = ".jpg"
     extension = 'static/img/users/'
+    savePath = extension + filename + filetype
+    i = 0
+    if (os.path.exists(savePath)):
+        while os.path.exists(savePath):
+            savePath = extension + filename + "_" + str(i) + filetype
+            i+=1
+        print(savePath)
+        accessPath = savePath[7:]
+        print(accessPath)
+        return savePath, accessPath
+    else:
+        print(savePath)
+        accessPath = savePath[7:]
+        print(accessPath)
+        return savePath, accessPath
+
+def findCompanyFileName(file):
+    filename = file.filename.rsplit('.', 1)[0]
+    fileType = file.filename.rsplit('.', 1)[1]
+    filename = filename[:-1]
+    if "png" == fileType or "PNG" == fileType:
+        filetype = ".png" 
+    if "jpg" == fileType or "JPG" == fileType:
+        filetype = ".jpg"
+    extension = 'static/img/company/'
     savePath = extension + filename + filetype
     i = 0
     if (os.path.exists(savePath)):

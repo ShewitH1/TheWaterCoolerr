@@ -1,0 +1,39 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<link href='https://fonts.googleapis.com/css?family=IBM Plex Sans Condensed' rel='stylesheet'>
+<link href="{{ url_for('static', filename='css/profile.css')}}" rel="stylesheet">
+<script>
+    var baseURL = "{{ url_for('static', filename='') }}";
+</script>
+{% if profile %}
+    <div class="container-fluid bg-secondary p-4" style="min-height: 100vh;">
+        <div class="container-fluid bg-dark p-1 rounded mb-4 profile-header-container">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename=profile['company_banner']) }}" alt="Image 1" class="banner-image">
+                <img src="{{ url_for('static', filename=profile['company_image']) }}" alt="Image 2" class="overlay-image rounded">
+                {% if profile['company_id'] == sessionProfile['company_id'] %}
+                <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+                <button type="button" class="btn btn-outline-success profile-edit-button" id="editCompanyButton" data-profile-id="{{profile['company_id']}}">Edit Profile</button>  
+                {% endif %}
+            </div>
+            <div class="header-text-name-container">
+                <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed';"">{{profile['name']}}</h1>
+                <!-- <h3 class="text-light" style="font-family: 'IBM Plex Sans Condensed';">{{profile['company_bio']}}</h3>          -->
+            </div>
+        </div>
+        <div class="container-fluid bg-dark p-1 rounded profile-body-container">
+            <div class="mx-3 mt-3">
+                <h3 class="text-light mb-3 text-decoration-underline element-header">About:</h1>
+                <h6 class="text-light element-description">{{profile['company_bio']}}</h6>
+            </div>
+            <div style="margin-bottom: 50px;"></div>
+        </div>
+    </div>
+{% else %}
+    <div class="container-fluid bg-secondary p-4" style="height: 100%;">
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">Oops! Something went wrong :(</h1>
+        <h1 class="text-light" style="font-family:'IBM Plex Sans Condensed'; text-align:center;">It seems like you searched an invalid profile ID.</h1>
+    </div>
+{% endif %}
+{% endblock %}
