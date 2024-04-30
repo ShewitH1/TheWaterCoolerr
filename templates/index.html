@@ -1,9 +1,49 @@
-{% extends '_layout.html' %}
-
-{% block title %}Feed | The Water Cooler{% endblock %}
+{% extends "_layout.html" %}
+{% block title %}Landing{% endblock %}  <!-- page title -->
 
 {% block body %}
-<h1 class="text-3xl font-bold">
-    Hello, world!
-</h1>
+
+
+<!-- Image banner -->
+<div class="flex justify-center">
+    <img src="../static/00f0dfd3-d902-49ef-80de-5889e1e0f1f0.png" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+    <img src="../static/istockphoto-172992784-612x612.jpg" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+    <img src="../static/3c096ea1-468b-4b0c-bd6a-0d866ee1a038.png" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+
+    <img src="../static/Screenshot 2024-03-25 204433.jpg" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+    <img src="../static/bbe44a80-b2cb-460a-aba1-7569f5bfc62a.png" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+
+    <img src="../static/Screenshot 2024-03-25 204524.jpg" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+    <img src="../static/815286f0-dea7-4cf4-8ca8-69ffdcf6e5db.png" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+    <img src="../static/Screenshot 2024-03-25 204623.jpg" alt="The Water Cooler Logo" class="h-32" style="width: 7%;" />
+    <img src="../static/96157713-3b75-4ca8-9120-797c1fa1cd2c.png" alt="The Water Cooler Logo" class="h-32" style="width: 10%;" />
+
+    <img src="../static/Screenshot 2024-03-25 204720.jpg" alt="The Water Cooler Logo" class="h-32" style="width: 8%;" />
+</div>
+
+<!-- Slogan -->
+<div class="text-center">
+    <h1 class="text-3xl font-semibold mt-8">Connecting Just The Right People</h1>
+</div>
+
+<!-- input fields / buttons -->
+<div class="flex justify-center">
+    <div class="text-center">
+        <input type="text" name="input_subject" placeholder="What are you looking for...?" class="mb-4">
+    </div>
+    <div class="text-center">
+        <input type="text" name="input_location" placeholder="Where are you looking...?" class="mb-4">
+    </div>
+</div>
+
+<div class="flex justify-center">
+    <div class="grid grid-cols-2 gap-4">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search Postings</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search People</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search Reviews</button>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Search Salaries</button>
+    </div>
+</div>
+
+
 {% endblock %}
