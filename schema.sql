@@ -20,7 +20,10 @@ CREATE TABLE IF NOT EXISTS company_account (
     name VARCHAR(64) UNIQUE NOT NULL,
     company_image VARCHAR(255),
     company_banner VARCHAR(255),
-    company_bio VARCHAR(128),
+    about_img_1 VARCHAR(255),
+    about_img_2 VARCHAR(255),
+    about_img_3 VARCHAR(255),
+    company_bio TEXT,
     is_auth BOOLEAN,
     PRIMARY KEY (company_id)
 );
@@ -43,13 +46,14 @@ DROP TYPE IF EXISTS education_level;
 CREATE TYPE education_level AS ENUM('GED', 'Certification', 'Bachelors', 'Masters', 'PhD');
 
 CREATE TABLE IF NOT EXISTS education_experience (
-    profile_id VARCHAR(16) NOT NULL,
-    institution_name VARCHAR(128) NOT NULL,
-    education_level education_level NOT NULL,
-    study_area VARCHAR(64) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    PRIMARY KEY (profile_id),
+    education_experience_id UUID DEFAULT uuid_generate_v4 (),
+    profile_id VARCHAR(16),
+    institution_name VARCHAR(128),
+    education_level VARCHAR(32),
+    study_area VARCHAR(64),
+    start_date VARCHAR(10),
+    end_date VARCHAR(10),
+    PRIMARY KEY (education_experience_id),
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

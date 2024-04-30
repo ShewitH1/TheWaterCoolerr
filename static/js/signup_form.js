@@ -159,6 +159,7 @@ function signup(event) {
         <div class="mt-2 mb-2">
             <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
         </div>`;
+        var submitButton = document.getElementById("submitButton")
     })
     .catch(error => {
         console.error('Error tracking analytics event:', error);
