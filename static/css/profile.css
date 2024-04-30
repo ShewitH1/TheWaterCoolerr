@@ -54,6 +54,15 @@ border-color: black;
     font-size: 18px;
 }
 
+.company-images-center {
+    text-align: center;
+}
+
+.about-image {
+    height: 350px;
+    width: 100%;
+}
+
 @media (max-width: 575.98px) {
     @media screen and (device-aspect-ratio: 16/9)
     {

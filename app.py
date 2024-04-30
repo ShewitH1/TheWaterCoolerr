@@ -199,8 +199,6 @@ def updateProfile():
     if request.method == 'POST':
         user_id = request.form.get('profile_id')
         type = request.form.get('type')
-        print(user_id)
-        print(type)
         if type == 'user':
             record = profile_repository.get_user_profile_by_id(user_id)
             if record is None:
@@ -212,11 +210,9 @@ def updateProfile():
             user_banner = None
             if 'firstname' in request.form:
                 firstname = request.form.get('firstname')
-                print(firstname)
                 profile_repository.update_profile_firstname(user_id, firstname)
             if 'lastname' in request.form:
                 lastname = request.form.get('lastname')
-                print(lastname)
                 profile_repository.update_profile_lastname(user_id, lastname)
             if 'profile_bio' in request.form:
                 user_bio = request.form.get('profile_bio')
@@ -242,8 +238,6 @@ def updateProfile():
             return jsonify({"message":"profile successfully updated!", "redirect":"/profile?profileType=user&id=" + user_id})
         elif type == 'company':
             record = profile_repository.get_company_profile_by_id(user_id)
-            print(record)
-            print(request.form.get('company_bio'))
             if 'name' in request.form:
                 newName = request.form.get('name')
                 status = profile_repository.update_company_name(user_id, newName)
@@ -289,31 +283,36 @@ def updateProfile():
             if 'about_img_1' in request.files:
                 newAboutIMG1 = request.files['about_img_1']
                 about_image_1, link = findCompanyFileName(newAboutIMG1)
-                old_about_image_1 = 'static/' + record['about_img_1']
-                if 'static/img/company/' in old_about_image_1:
-                    if os.path.exists(old_about_image_1):
-                        os.remove(old_about_image_1)
+                old_record = record['about_img_1']
+                if old_record is not None:
+                    old_about_image_1 = 'static/' + record['about_img_1']
+                    if 'static/img/company/' in old_about_image_1:
+                        if os.path.exists(old_about_image_1):
+                            os.remove(old_about_image_1)
                 newAboutIMG1.save(about_image_1)
-                profile_repository.update_about_img(user_id, link)
+                profile_repository.update_about_img(user_id, link, id=0)
             if 'about_img_2' in request.files:
                 newAboutIMG2 = request.files['about_img_2']
                 about_image_2, link = findCompanyFileName(newAboutIMG2)
-                old_about_image_2 = 'static/' + record['about_img_1']
-                if 'static/img/company/' in old_about_image_2:
-                    if os.path.exists(old_about_image_2):
-                        os.remove(old_about_image_2)
+                old_record = record['about_img_2']
+                if old_record is not None:
+                    old_about_image_2 = 'static/' + record['about_img_1']
+                    if 'static/img/company/' in old_about_image_2:
+                        if os.path.exists(old_about_image_2):
+                            os.remove(old_about_image_2)
                 newAboutIMG2.save(about_image_2)
-                profile_repository.update_about_img(user_id, link)
+                profile_repository.update_about_img(user_id, link, id=1)
             if 'about_img_3' in request.files:
                 newAboutIMG3 = request.files['about_img_3']
                 about_image_3, link = findCompanyFileName(newAboutIMG3)
-                old_about_image_3 = 'static/' + record['about_img_1']
-                if 'static/img/company/' in old_about_image_3:
-                    if os.path.exists(old_about_image_3):
-                        os.remove(old_about_image_3)
+                old_record = record['about_img_3']
+                if old_record is not None:
+                    old_about_image_3 = 'static/' + record['about_img_1']
+                    if 'static/img/company/' in old_about_image_3:
+                        if os.path.exists(old_about_image_3):
+                            os.remove(old_about_image_3)
                 newAboutIMG3.save(about_image_3)
-                profile_repository.update_about_img(user_id, link)
-            print("I got here!")
+                profile_repository.update_about_img(user_id, link, id=2)
             return jsonify({"message":"profile successfully updated!", "redirect":"/profile?profileType=company&id=" + user_id})
         else:
             return jsonify({"message":"failure to update profile, invalid type."})
@@ -333,14 +332,10 @@ def findUserFileName(file):
         while os.path.exists(savePath):
             savePath = extension + filename + "_" + str(i) + filetype
             i+=1
-        print(savePath)
         accessPath = savePath[7:]
-        print(accessPath)
         return savePath, accessPath
     else:
-        print(savePath)
         accessPath = savePath[7:]
-        print(accessPath)
         return savePath, accessPath
 
 def findCompanyFileName(file):
@@ -358,14 +353,10 @@ def findCompanyFileName(file):
         while os.path.exists(savePath):
             savePath = extension + filename + "_" + str(i) + filetype
             i+=1
-        print(savePath)
         accessPath = savePath[7:]
-        print(accessPath)
         return savePath, accessPath
     else:
-        print(savePath)
         accessPath = savePath[7:]
-        print(accessPath)
         return savePath, accessPath
 
 @app.route('/addWorkExperience', methods=['POST'])
@@ -384,12 +375,10 @@ def addWork():
 def updateWork():
     if request.method == 'POST':
         data = request.json
-        print(data)
         exp_id = data['work_experience_id']
         if exp_id is None:
             return jsonify({'message':'Failed to update work experience, missing id', 'response':'failure-id'})
         title = data['job_title']
-        print(title)
         if title == '':
             return jsonify({'message':'Failed to update work experience, missing title', 'response':'failure-title'})
         cmpy_name = data['company_name']
@@ -418,7 +407,6 @@ def updateWork():
         else:
             water_cooler = False
         status = profile_repository.update_work_experience_by_id(exp_id, title, cmpy_name, sector, start_date, end_date, description, water_cooler)
-        print(status)
         if status == 1:
             return jsonify({'message':'Updated work experience successfully!', 'response':'success'})
         elif status == -1:
@@ -453,12 +441,10 @@ def addEducation():
 def updateEducation():
     if request.method == 'POST':
         data = request.json
-        print(data)
         exp_id = data['education_experience_id']
         if exp_id is None:
             return jsonify({'message':'Failed to update education experience, missing id', 'response':'failure-id'})
         institution = data['institution_name']
-        print(institution)
         if institution == '':
             return jsonify({'message':'Failed to update education experience, missing institution name', 'response':'failure-inst'})
         level = data['education_level']
@@ -481,7 +467,6 @@ def updateEducation():
             if logic_end_date > curr_date:
                 return jsonify({'message':'Failed to update work experience, invalid end-date (end date cannot be greater than current date)', 'response':'failure-greater-date-end'})
         status = profile_repository.update_education_experience_by_id(exp_id, institution, level, area, start_date, end_date)
-        print(status)
         if status == 1:
             return jsonify({'message':'Updated work experience successfully!', 'response':'success'})
         elif status == -1:

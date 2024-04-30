@@ -27,6 +27,24 @@
                 <h3 class="text-light mb-3 text-decoration-underline element-header">About:</h1>
                 <h6 class="text-light element-description">{{profile['company_bio']}}</h6>
             </div>
+            <div style="margin-bottom: 25px;"></div>
+            <div class="mx-3 row justify-content-between">
+                <div class="col-4 company-images-center">
+                    {% if profile['about_img_1'] %}
+                        <img src="{{ url_for('static', filename=profile['about_img_1']) }}" class="about-image">
+                    {% endif %}
+                </div>
+                <div class="col-4 company-images-center">
+                    {% if profile['about_img_2'] %}
+                        <img src="{{ url_for('static', filename=profile['about_img_2']) }}" class="about-image">
+                    {% endif %}
+                </div>
+                <div class="col-4 company-images-center">
+                    {% if profile['about_img_3'] %}
+                        <img src="{{ url_for('static', filename=profile['about_img_3']) }}" class="about-image">
+                    {% endif %}
+                </div>
+            </div>
             <div style="margin-bottom: 50px;"></div>
         </div>
     </div>

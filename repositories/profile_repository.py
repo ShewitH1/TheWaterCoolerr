@@ -100,6 +100,9 @@ def get_company_profile_by_id(company_id):
                                     company_image,
                                     company_banner,
                                     company_bio,
+                                    about_img_1,
+                                    about_img_2,
+                                    about_img_3,
                                     name
                                 FROM
                                     company_account
@@ -262,14 +265,14 @@ def update_company_name(profile_id=None, name=None):
     try:
         with pool.getconn() as conn:
             with conn.cursor(row_factory=dict_row) as cursor:
-                if (check_id_pair_exists("user", profile_id, conn)):
+                if (check_id_pair_exists("company", profile_id, conn)):
                     cursor.execute('''
                                         UPDATE
                                             company_account
                                         SET
                                             name = %s
                                         WHERE
-                                            profile_id = %s
+                                            company_id = %s
                                         ''', (name, profile_id))
                     conn.commit()
                     return 0
@@ -414,32 +417,47 @@ def update_about_img(profile_id=None, about_img=None, id=0):
         return -3
     if id > 3 or id < 0:
         return -2
-    imgDict = {
-        0:'about_img1',
-        1:'about_img_2',
-        2:'about_img_3'
-    }
-    updateIMG = imgDict(id)
     conn = None
     pool = get_pool()
     try:
         with pool.getconn() as conn:
             with conn.cursor(row_factory=dict_row) as cursor:
-                cursor.execute('''
-                                UPDATE
-                                    company_account
-                                SET
-                                    %s = %s
-                                WHERE
-                                    profile_id = %s
-                                ''', (updateIMG, about_img, profile_id))
-                conn.commit()
+                if id == 0:
+                    cursor.execute('''
+                                    UPDATE
+                                        company_account
+                                    SET
+                                        about_img_1 = %s
+                                    WHERE
+                                        company_id = %s
+                                    ''', (about_img, profile_id))
+                    conn.commit()
+                elif id == 1:
+                    cursor.execute('''
+                                    UPDATE
+                                        company_account
+                                    SET
+                                        about_img_2 = %s
+                                    WHERE
+                                        company_id = %s
+                                    ''', (about_img, profile_id))
+                    conn.commit()
+                elif id == 2:
+                    cursor.execute('''
+                                    UPDATE
+                                        company_account
+                                    SET
+                                        about_img_3 = %s
+                                    WHERE
+                                        company_id = %s
+                                    ''', (about_img, profile_id))
+                    conn.commit()
     except Exception as e:
         print("Failure updating about image")
         print(e)
     finally:
         if conn is not None:
-            pool.putconn()
+            pool.putconn(conn)
 # Logic Methods
 
 def check_id_taken(new_id):

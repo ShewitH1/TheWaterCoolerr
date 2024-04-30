@@ -345,7 +345,7 @@ function saveAll() {
                 profileData.append('company_image', profile.files[0]);
             }
         }
-        var banner = document.getElementById('profileBanner');
+        var banner = document.getElementById('bannerUpload');
         if (banner) {
             if (banner.files.length > 0) {
                 profileData.append('company_banner', banner.files[0]);
@@ -357,18 +357,19 @@ function saveAll() {
                 profileData.append('about_img_1', aboutIMG1.files[0]);
             }
         }
-        var aboutIMG2 = document.getElementById('aboutIMG1');
+        var aboutIMG2 = document.getElementById('aboutIMG2');
         if (aboutIMG2) {
             if (aboutIMG2.files.length > 0) {
-                profileData.append('about_img_1', aboutIMG2.files[0]);
+                profileData.append('about_img_2', aboutIMG2.files[0]);
             }
         }
-        var aboutIMG3 = document.getElementById('aboutIMG1');
+        var aboutIMG3 = document.getElementById('aboutIMG3');
         if (aboutIMG3) {
             if (aboutIMG3.files.length > 0) {
-                profileData.append('about_img_1', aboutIMG3.files[0]);
+                profileData.append('about_img_3', aboutIMG3.files[0]);
             }
         }
+        console.log(profileData);
         fetch('/updateProfile', {
             method: 'POST',
             body: profileData
