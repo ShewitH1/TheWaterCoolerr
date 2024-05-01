@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <input type="password" class="form-control" id="passwordArea" name="password" required>
             </div>
             <div class="mt-2 mb-2">
-            <label for="companyName">Enter your firstname:</label>
+            <label for="companyName">Enter the company name:</label>
             <input type="text" class="form-control" id="companyName" name="companyName" required>
             </div>`;
             submitButton.style.display="block";
