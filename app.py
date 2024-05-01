@@ -492,7 +492,13 @@ def job_search():
     job_posting = job_repository.get_job_posting_for_table(posting_id)
     if not job_posting:
         job_posting = []
-    return render_template('job_search.html', sessionProfile=session['sessionProfile'], job_posting=job_posting)
+    sessionProfile = None
+    if 'sessionProfile' in session:
+        sessionProfile = session['sessionProfile']
+        session['next'] = request.url
+    else:
+        session['next'] = request.url
+    return render_template('job_search.html', sessionProfile=sessionProfile, job_posting=job_posting)
 
 # Creates a new job posting
 @app.post('/create_job_posting')
@@ -580,14 +586,22 @@ def company_login():
 
 @app.route('/application_portal')
 def application_portal():
+    sessionProfile = None
+    if 'sessionProfile' in session:
+        sessionProfile = session['sessionProfile']
+        sessionType = session.get('type')
+        session['next'] = request.url
+    else:
+        session['next'] = request.url
+
+    if sessionProfile == None:
+        return redirect('/login')
     if session['sessionProfile'].get('company_id') is not None:
         print("Current sesh ID: " + session['sessionProfile'].get('company_id'))
-        return render_template('app_dashboard_company.html', sessionProfile=session['sessionProfile'], name=session['sessionProfile'].get('name'), applicants=application_repository.get_applications_for_company(session['sessionProfile'].get('company_id')))
+        return render_template('app_dashboard_company.html', sessionProfile=sessionProfile, name=session['sessionProfile'].get('name'), applicants=application_repository.get_applications_for_company(session['sessionProfile'].get('company_id')))
     elif session['sessionProfile'].get('profile_id') is not None:
         print("Current sesh ID: " + session['sessionProfile'].get('profile_id'))
-        return render_template('app_dashboard.html', sessionProfile=session['sessionProfile'], name=session['sessionProfile'].get('firstname'), applications=application_repository.get_applications_for_user(session['sessionProfile'].get('profile_id')))
-    else:
-        return redirect('/login')
+        return render_template('app_dashboard.html', sessionProfile=sessionProfile, name=session['sessionProfile'].get('firstname'), applications=application_repository.get_applications_for_user(session['sessionProfile'].get('profile_id')))
     
 @app.route('/application_portal/<posting_id>/<user_id>')
 def application_portal_answers(posting_id, user_id):

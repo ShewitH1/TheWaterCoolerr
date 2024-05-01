@@ -1,5 +1,7 @@
 {% extends '_layout.html' %}
 
+{% block title %}Sign Up{% endblock %}
+
 {% block body %}
 <script src="{{ url_for('static', filename='js/signup_form.js') }}"></script>
 <form id="signupForm" class="w-50" onsubmit="signup(event)" enctype="multipart/form-data">
