@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <input type="password" class="form-control" id="passwordArea" name="password" required>
             </div>
             <div class="mt-2 mb-2">
-            <label for="companyName">Enter your firstname:</label>
+            <label for="companyName">Enter the company name:</label>
             <input type="text" class="form-control" id="companyName" name="companyName" required>
             </div>`;
             submitButton.style.display="block";
@@ -159,6 +159,7 @@ function signup(event) {
         <div class="mt-2 mb-2">
             <input type="file" class="form-control-file" id="bannerUpload" name="newBanner" accept="image/*">
         </div>`;
+        var submitButton = document.getElementById("submitButton")
     })
     .catch(error => {
         console.error('Error tracking analytics event:', error);

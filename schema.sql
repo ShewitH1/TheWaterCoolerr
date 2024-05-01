@@ -20,7 +20,10 @@ CREATE TABLE IF NOT EXISTS company_account (
     name VARCHAR(64) UNIQUE NOT NULL,
     company_image VARCHAR(255),
     company_banner VARCHAR(255),
-    company_bio VARCHAR(128),
+    about_img_1 VARCHAR(255),
+    about_img_2 VARCHAR(255),
+    about_img_3 VARCHAR(255),
+    company_bio TEXT,
     is_auth BOOLEAN,
     PRIMARY KEY (company_id)
 );
@@ -43,13 +46,14 @@ DROP TYPE IF EXISTS education_level;
 CREATE TYPE education_level AS ENUM('GED', 'Certification', 'Bachelors', 'Masters', 'PhD');
 
 CREATE TABLE IF NOT EXISTS education_experience (
-    profile_id VARCHAR(16) NOT NULL,
-    institution_name VARCHAR(128) NOT NULL,
-    education_level education_level NOT NULL,
-    study_area VARCHAR(64) NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    PRIMARY KEY (profile_id),
+    education_experience_id UUID DEFAULT uuid_generate_v4 (),
+    profile_id VARCHAR(16),
+    institution_name VARCHAR(128),
+    education_level VARCHAR(32),
+    study_area VARCHAR(64),
+    start_date VARCHAR(10),
+    end_date VARCHAR(10),
+    PRIMARY KEY (education_experience_id),
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -87,6 +91,16 @@ CREATE TABLE application_answers (
     FOREIGN KEY (question_id) REFERENCES application_questions(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE user_application_data (
+    id SERIAL PRIMARY KEY,
+    profile_id VARCHAR(16) NOT NULL,
+    posting_id VARCHAR(24) NOT NULL,
+    application_status VARCHAR(32) NOT NULL,
+    seen BOOLEAN DEFAULT false
+    FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (posting_id) REFERENCES job_posting(posting_id) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
 INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
 VALUES ('COMP001', 'comp', 'abc', 'theman', 'image', 'image', 'this is a real comp', true);
 
@@ -98,6 +112,9 @@ VALUES ('COMP003', 'hire', 'xyz', 'Boston Consoling Group', 'group_hug', 'therap
 
 INSERT INTO company_account (company_id, login, pass, name, company_image, company_banner, company_bio, is_auth)
 VALUES ('COMP004', 'live', 'wire', 'School of Hard Rock', 'concert', 'guitar hero 3', 'We are here to rock!', true);
+
+INSERT INTO user_account (profile_id, email, pass, firstname, lastname, profile_image, profile_banner, profile_bio, is_auth)
+VALUES ('USER001', 'johnsmith@gmail.com', 'password', 'John', 'Smith', 'profile_image', 'profile_banner', 'I am a software engineer with a passion for technology.', true);
 
 INSERT INTO job_posting (posting_id, company_id, job_title, description, salary)
 VALUES ('POST001', 'COMP001', 'Software Engineer', 'We are seeking a highly skilled software engineer to join our dynamic team.', 80000.00);
@@ -128,3 +145,15 @@ VALUES ('POST001', 'What is something you have worked on that you are proud of?'
 
 INSERT INTO application_questions (posting_id, question_text)
 VALUES ('POST001', 'Please write down your previous work experience.');
+
+INSERT INTO application_answers (profile_id, posting_id, question_id, response_text)
+VALUES ('USER001', 'POST001', 1, 'I have a strong background in software engineering and have worked on several high-profile projects.');
+
+INSERT INTO application_answers (profile_id, posting_id, question_id, response_text)
+VALUES ('USER001', 'POST001', 2, 'I have a Bachelor''s degree in Computer Science.');
+
+INSERT INTO application_answers (profile_id, posting_id, question_id, response_text)
+VALUES ('USER001', 'POST001', 3, 'I recently led a team to successfully launch a new software product.');
+
+INSERT INTO application_answers (profile_id, posting_id, question_id, response_text)
+VALUES ('USER001', 'POST001', 4, 'I have 5 years of experience as a software engineer at a leading tech company.');
