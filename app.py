@@ -44,9 +44,9 @@ def index():
 def login():
     if request.method == 'POST':
         username = request.form.get("username")
-        print(username)
+        #print(username)
         password = request.form.get("password")
-        print(password)
+        #print(password)
         user_record = profile_repository.get_user_by_login(username)
         company_record = profile_repository.get_company_by_login(username)
         if user_record is not None:
@@ -62,7 +62,7 @@ def login():
             if not bcrypt.check_password_hash(company_record['hashed_password'], password):
                 return redirect('/login')
             session['sessionProfile'] = profile_repository.get_company_profile_by_id(company_record['company_id'])
-            print(session['sessionProfile'])
+            #print(session['sessionProfile'])
             session['type'] = 'company'
             if session['next'] is not None:
                 return redirect(session['next'])
@@ -159,9 +159,9 @@ def profile():
         session['next'] = request.url
     
     profileType = request.args.get('profileType')
-    print(profileType)
+    #print(profileType)
     profileId = request.args.get('id')
-    print(profileId)
+    #print(profileId)
     if profileType == 'user':
         profile = profile_repository.get_user_profile_by_id(profileId)
         work = profile_repository.get_all_workplace_experience_by_profile(profileId)
@@ -169,7 +169,7 @@ def profile():
         return render_template('user_profile.html', sessionProfile=sessionProfile, profile=profile, work=work, education=education)
     elif profileType == 'company':
         profile = profile_repository.get_company_profile_by_id(profileId)
-        print(profile)
+        #print(profile)
         return render_template('company_profile.html', sessionProfile=sessionProfile, profile=profile)
     else:
         abort(400)
@@ -444,9 +444,9 @@ def addEducation():
         new_edu_id = profile_repository.create_new_education_experience(profileID)
         if new_edu_id is not None:
             levels = ["Certification", "GED", "Bachelors", "Masters", "PhD"]
-            return jsonify({'message':'new work experience id created','eduExpID':new_edu_id, 'levels':levels})
+            return jsonify({'message':'new education experience id created','eduExpID':new_edu_id, 'levels':levels})
         else:
-            return jsonify({'message':'failed to create new workplace ID'})
+            return jsonify({'message':'failed to create new education experience id'})
 
 @app.route('/updateEducationExperience', methods=['POST'])
 def updateEducation():
@@ -476,14 +476,14 @@ def updateEducation():
         else:
             logic_end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
             if logic_end_date > curr_date:
-                return jsonify({'message':'Failed to update work experience, invalid end-date (end date cannot be greater than current date)', 'response':'failure-greater-date-end'})
+                return jsonify({'message':'Failed to update education experience, invalid end-date (end date cannot be greater than current date)', 'response':'failure-greater-date-end'})
         status = profile_repository.update_education_experience_by_id(exp_id, institution, level, area, start_date, end_date)
         if status == 1:
-            return jsonify({'message':'Updated work experience successfully!', 'response':'success'})
+            return jsonify({'message':'Updated education experience successfully!', 'response':'success'})
         elif status == -1:
-            return jsonify({'message':'Failed to update work experience, missing title', 'response':'failure-title'})
+            return jsonify({'message':'Failed to update education experience, missing title', 'response':'failure-title'})
         elif status == -2:
-            return jsonify({'message':'Failed to update work experience, missing id', 'response':'failure-id'})
+            return jsonify({'message':'Failed to update education experience, missing id', 'response':'failure-id'})
 
 @app.route('/deleteEducationExperience', methods=['POST'])
 def deleteEducation():
@@ -580,7 +580,7 @@ def company_login():
 @app.route('/application_portal')
 def application_portal():
     sessionProfile = get_session_profile()
-    print(sessionProfile)
+    #print(sessionProfile)
     if sessionProfile is None:
         return redirect('/login')
     if 'company_id' in sessionProfile and sessionProfile['company_id'] is not None:
