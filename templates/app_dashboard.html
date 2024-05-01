@@ -43,7 +43,7 @@
                             <tr>
                                 <th scope="col" style="width: 33%">Applicant</th>
                                 <th scope="col" style="width: 33%">Status</th>
-                                <th scope="col" style="width: 33%">Posting ID</th>
+                                <th scope="col" style="width: 33%">Company</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,7 +51,7 @@
                             {% for application in applications %}
                             <tr>
                                 <td>
-                                    {{ application[0] }} @ {{ application[1] }}
+                                    {{ application[0] }}
                                 </td>
                                 <td>
                                     <span
@@ -59,7 +59,7 @@
                                         {{ application[2].capitalize() }}
                                     </span>
                                 </td>
-                                <td>{{ application[3] }}</td>
+                                <td>{{ application[1] }}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

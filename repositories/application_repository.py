@@ -14,8 +14,12 @@ def submit_application(profile_id, posting_id, answers):
         return False
     with get_pool().getconn() as conn:
         with conn.cursor() as cur:
+            cur.execute("SELECT * FROM application_answers WHERE profile_id = %s AND posting_id = %s", (profile_id, posting_id))
+            if cur.fetchone() is not None:
+                return False
             set_application_status(posting_id, profile_id, 'waiting')
             for question_id, answer in answers.items():
+                question_id = int(question_id)
                 cur.execute("INSERT INTO application_answers (profile_id, posting_id, question_id, response_text) VALUES (%s, %s, %s, %s)", (profile_id, posting_id, question_id, answer))
         conn.commit()
     get_pool().putconn(conn)
@@ -89,3 +93,18 @@ def get_applications_for_user(profile_id):
             applications = cur.fetchall()
     get_pool().putconn(conn)
     return applications
+
+def add_questions_to_posting(posting_id, questions):
+    if not posting_id or not questions:
+        print("Invalid input")
+        return False
+    with get_pool().getconn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT 1 FROM job_posting WHERE posting_id = %s", (posting_id,))
+            if cur.fetchone() is None:
+                print("Invalid posting_id")
+                return False
+            for question in questions:
+                cur.execute("INSERT INTO application_questions (posting_id, question_text) VALUES (%s, %s)", (posting_id, question))
+            conn.commit()
+    return True

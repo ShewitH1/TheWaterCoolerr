@@ -63,7 +63,7 @@ def get_user_profile_by_id(user_id):
 
 def get_company_by_login(company_login):
     if company_login is None:
-        return False
+        return None
     conn = None
     pool = get_pool()
     try:
@@ -81,7 +81,7 @@ def get_company_by_login(company_login):
                 return cursor.fetchone()
     except Exception as e:
         print(e)
-        return False
+        return None
     finally:
         if conn is not None:
             pool.putconn(conn)

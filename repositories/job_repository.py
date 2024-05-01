@@ -1,7 +1,7 @@
 from repositories.db import get_pool
 from psycopg.rows import dict_row
 from datetime import datetime
-import json
+import uuid
 
 def get_job_posting_for_table(posting_id):
     if posting_id is None:
@@ -33,23 +33,20 @@ def get_job_posting_for_table(posting_id):
             pool.putconn(conn)
 
 def create_job_posting(job_title, posting_date, description, salary, company_id):
-    conn = None
     pool = get_pool()
+    posting_id = str(uuid.uuid4()).replace('-', '')[:24]
     try:
         with pool.connection() as conn:
             with conn.cursor() as cursor:
                 cursor.execute('''
-                        INSERT INTO job_posting (job_title, posting_date, description, salary, company_id)
-                        VALUES (%s, %s, %s, %s, %s)
+                        INSERT INTO job_posting (posting_id, job_title, posting_date, description, salary, company_id)
+                        VALUES (%s, %s, %s, %s, %s, %s)
                         RETURNING posting_id;
-                                ''', [job_title, posting_date, description, salary, company_id]) 
-                return cursor.fetchone()[0]
+                                ''', [posting_id, job_title, posting_date, description, salary, company_id]) 
+                return posting_id
     except Exception as e:
         print(e)
-        return False
-    finally:
-        if conn is not None:
-            pool.putconn(conn)
+        return None
 
 def update_job_posting(posting_id, job_title, posting_date, description, salary, company_id):
     conn = None
