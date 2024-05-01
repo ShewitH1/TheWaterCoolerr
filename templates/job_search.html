@@ -6,23 +6,25 @@
 <div class="container">
   <h1 class="display-4 font-weight-bold text-center">Job Search Results</h1>
 
-  {% if job_posting %}
-    <div class="mt-4">
-      <div class="card border-secondary rounded-lg">
-        <div class="card-body">
-          <h2 class="card-title h4 font-weight-bold">{{ job_posting.job_title }}</h2>
-          <ul class="list-unstyled">
-            <li><strong>Posting Date:</strong> {{ job_posting.posting_date }}</li>
-            <li><strong>Description:</strong> {{ job_posting.description }}</li>
-            <li><strong>Salary:</strong> {{ job_posting.salary }}</li>
-            <li><strong>Company ID:</strong> {{ job_posting.company_id }}</li>
-          </ul>
-          <a href="/job_listing.html?job_id={{ job_posting.job_id }}" class="btn btn-primary">View Job</a>
-        </div>
+  {% if job_postings %}
+  {% for job_posting in job_postings %}
+  <div class="mt-4">
+    <div class="card border-secondary rounded-lg">
+      <div class="card-body">
+        <h2 class="card-title h4 font-weight-bold">{{ job_posting.job_title }}</h2>
+        <ul class="list-unstyled">
+          <li><strong>Posting Date:</strong> {{ job_posting.posting_date }}</li>
+          <li><strong>Description:</strong> {{ job_posting.description }}</li>
+          <li><strong>Salary:</strong> ${{ job_posting.salary }}</li>
+          <li><strong>Company ID:</strong> {{ job_posting.company_id }}</li>
+        </ul>
+        <a href="/job_listing.html?job_id={{ job_posting.job_id }}" class="btn btn-primary">View Job</a>
       </div>
     </div>
+  </div>
+  {% endfor %}
   {% else %}
-    <p>No job posting found.</p>
+  <p>No job posting found.</p>
   {% endif %}
 </div>
 {% endblock %}

@@ -21,9 +21,11 @@
               <li class="navbar.item">
                 <a class="nav-link" href="job_search.html">Browse Listings</a>
               </li>
+              {% if sessionProfile %}
               <li class="navbar.item">
-                <a class="nav-link" href="{{url_for('application_portal')}}">Application Dashboard</a>
+                <a class="nav-link" href="{{url_for('application_portal')}}">Dashboard</a>
               </li>
+              {% endif %}
             </ul>
           </div>
     
