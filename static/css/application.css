@@ -32,7 +32,6 @@ p {
     font-family: 'IBM Plex Sans Condensed', sans-serif;
 }
 a {
-    font-family: 'IBM Plex Sans', sans-serif;
     text-decoration: none;
     color: var(--blue-color);
     font-weight: bold;
@@ -67,4 +66,10 @@ a {
 .awaiting-applicant {
     color: var(--orange-color);
     font-weight: bold;
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container-fluid {
+        padding: 0px !important;
+    }
 }

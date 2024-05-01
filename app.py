@@ -492,7 +492,7 @@ def job_search():
     job_posting = job_repository.get_job_posting_for_table(posting_id)
     if not job_posting:
         job_posting = []
-    return render_template('job_search.html', job_posting=job_posting)
+    return render_template('job_search.html', sessionProfile=session['sessionProfile'], job_posting=job_posting)
 
 # Creates a new job posting
 @app.post('/create_job_posting')
@@ -577,6 +577,37 @@ def company_login():
             return render_template("login.html", account_not_exists="TRUE")
     else:
         return render_template('login.html')
+
+@app.route('/application_portal')
+def application_portal():
+    if session['sessionProfile'].get('company_id') is not None:
+        print("Current sesh ID: " + session['sessionProfile'].get('company_id'))
+        return render_template('app_dashboard_company.html', sessionProfile=session['sessionProfile'], name=session['sessionProfile'].get('name'), applicants=application_repository.get_applications_for_company(session['sessionProfile'].get('company_id')))
+    elif session['sessionProfile'].get('profile_id') is not None:
+        print("Current sesh ID: " + session['sessionProfile'].get('profile_id'))
+        return render_template('app_dashboard.html', sessionProfile=session['sessionProfile'], name=session['sessionProfile'].get('firstname'), applications=application_repository.get_applications_for_user(session['sessionProfile'].get('profile_id')))
+    else:
+        return redirect('/login')
+    
+@app.route('/application_portal/<posting_id>/<user_id>')
+def application_portal_answers(posting_id, user_id):
+    answers = application_repository.get_user_answers_for_posting(user_id, posting_id)
+    questions = application_repository.get_questions_for_application(posting_id)
+    print('questions: ')
+    print(questions)
+    print('answers: ')
+    print(answers)
+    return render_template('app_dashboard_company.html', answers=answers, questions=questions, posting_id=posting_id, user_id=user_id, users_name=application_repository.get_users_full_name(user_id))
+
+@app.route('/application_portal/<posting_id>/<user_id>/accept')
+def application_portal_accept(posting_id, user_id):
+    application_repository.set_application_status(posting_id, user_id, 'accepted')
+    return redirect('/application_portal')
+
+@app.route('/application_portal/<posting_id>/<user_id>/reject')
+def application_portal_reject(posting_id, user_id):
+    application_repository.set_application_status(posting_id, user_id, 'rejected')
+    return redirect('/application_portal')
 
 @app.route('/apply/<posting_id>')
 def apply(posting_id):
