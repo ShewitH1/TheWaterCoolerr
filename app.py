@@ -2,9 +2,11 @@ from flask import Flask, abort, redirect, render_template, request, session, jso
 from dotenv import load_dotenv
 from flask_bcrypt import Bcrypt
 from datetime import datetime, date
+import re
 import os
 
 from repositories import profile_repository, job_repository, application_repository
+from datetime import datetime
 
 load_dotenv()
 
@@ -13,6 +15,17 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 app.secret_key = b'd8585dc38f97d4df573395d28ec223123af2fc139ec8183a0d1c2954ef7f2b51'
+
+def get_session_profile():
+    sessionProfile = None
+    if 'sessionProfile' in session:
+        sessionProfile = session['sessionProfile']
+        session['next'] = request.url
+    else:
+        session['next'] = request.url
+    if isinstance(sessionProfile, bool):
+        sessionProfile = None
+    return sessionProfile
 
 @app.route('/')
 def index():
@@ -500,19 +513,6 @@ def job_search():
         session['next'] = request.url
     return render_template('job_search.html', sessionProfile=sessionProfile, job_posting=job_posting)
 
-# Creates a new job posting
-@app.post('/create_job_posting')
-def create_job_posting_route():
-    job_title = request.form.get('job_title')
-    posting_date = request.form.get('posting_date')
-    description = request.form.get('description')
-    salary = request.form.get('salary')
-    company_id = request.form.get('company_id')
-    job_id = job_repository.create_job_posting(job_title, posting_date, description, salary, company_id)
-    if job_id is False:
-        abort(500, description="Error creating job posting")
-    return redirect(url_for('job_listing'))
-
 # Updates a job posting
 @app.post('/update_job_posting')
 def update_job_posting_route():
@@ -586,59 +586,88 @@ def company_login():
 
 @app.route('/application_portal')
 def application_portal():
-    sessionProfile = None
-    if 'sessionProfile' in session:
-        sessionProfile = session['sessionProfile']
-        sessionType = session.get('type')
-        session['next'] = request.url
-    else:
-        session['next'] = request.url
-
-    if sessionProfile == None:
+    sessionProfile = get_session_profile()
+    print(sessionProfile)
+    if sessionProfile is None:
         return redirect('/login')
-    if session['sessionProfile'].get('company_id') is not None:
-        print("Current sesh ID: " + session['sessionProfile'].get('company_id'))
-        return render_template('app_dashboard_company.html', sessionProfile=sessionProfile, name=session['sessionProfile'].get('name'), applicants=application_repository.get_applications_for_company(session['sessionProfile'].get('company_id')))
-    elif session['sessionProfile'].get('profile_id') is not None:
-        print("Current sesh ID: " + session['sessionProfile'].get('profile_id'))
-        return render_template('app_dashboard.html', sessionProfile=sessionProfile, name=session['sessionProfile'].get('firstname'), applications=application_repository.get_applications_for_user(session['sessionProfile'].get('profile_id')))
-    
+    if 'company_id' in sessionProfile and sessionProfile['company_id'] is not None:
+        print("Current sesh ID: " + sessionProfile['company_id'])
+        return render_template('app_dashboard_company.html', sessionProfile=sessionProfile, name=sessionProfile['name'], applicants=application_repository.get_applications_for_company(sessionProfile['company_id']))
+    elif 'profile_id' in sessionProfile and sessionProfile['profile_id'] is not None:
+        print("Current sesh ID: " + sessionProfile['profile_id'])
+        return render_template('app_dashboard.html', sessionProfile=sessionProfile, name=sessionProfile['firstname'], applications=application_repository.get_applications_for_user(sessionProfile['profile_id']))
+
 @app.route('/application_portal/<posting_id>/<user_id>')
 def application_portal_answers(posting_id, user_id):
     answers = application_repository.get_user_answers_for_posting(user_id, posting_id)
     questions = application_repository.get_questions_for_application(posting_id)
-    print('questions: ')
-    print(questions)
-    print('answers: ')
-    print(answers)
-    return render_template('app_dashboard_company.html', answers=answers, questions=questions, posting_id=posting_id, user_id=user_id, users_name=application_repository.get_users_full_name(user_id))
+    return render_template('app_dashboard_company.html', sessionProfile=get_session_profile(), answers=answers, questions=questions, posting_id=posting_id, user_id=user_id, users_name=application_repository.get_users_full_name(user_id))
 
 @app.route('/application_portal/<posting_id>/<user_id>/accept')
 def application_portal_accept(posting_id, user_id):
+    sessionProfile = None
+    if 'sessionProfile' in session:
+        sessionProfile = session['sessionProfile']
+        session['next'] = request.url
+    else:
+        session['next'] = request.url
     application_repository.set_application_status(posting_id, user_id, 'accepted')
     return redirect('/application_portal')
 
 @app.route('/application_portal/<posting_id>/<user_id>/reject')
 def application_portal_reject(posting_id, user_id):
+    sessionProfile = get_session_profile()
     application_repository.set_application_status(posting_id, user_id, 'rejected')
     return redirect('/application_portal')
 
 @app.route('/apply/<posting_id>')
 def apply(posting_id):
+    sessionProfile = get_session_profile()
+    # can carry the case of both not logged in AND not having a profile_id (company)
+    if (sessionProfile.get('profile_id') == None):
+        return redirect('/application_portal')
     questions = application_repository.get_questions_for_application(posting_id)
-    return render_template('application.html', questions=questions, posting_id=posting_id)
+    return render_template('application.html', questions=questions, posting_id=posting_id, sessionProfile=sessionProfile)
+
+@app.route('/create_application')
+def create_application():
+    sessionProfile = get_session_profile()
+    if sessionProfile == None:
+        return redirect('/login')
+    return render_template('create_application.html', sessionProfile=sessionProfile)
+
+@app.post('/submit_job_posting')
+def submit_job_posting():
+    sessionProfile = get_session_profile()
+    if sessionProfile == None:
+        return redirect('/login')
+    title = request.form.get('title')
+    description = request.form.get('description')
+    salary = request.form.get('salary')
+    questions = request.form.getlist('question[]')
+    company_id = sessionProfile.get('company_id')
+    if (not title or not description or not salary or not questions or not company_id):
+        abort(400, description="Missing form data")
+    posting_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    posting_id = job_repository.create_job_posting(title, posting_date, description, salary, company_id)
+    if application_repository.add_questions_to_posting(posting_id, questions):
+        print("Added questions to posting.")
+    else:
+        print("Failed to add questions to posting.")
+    return redirect('/application_portal')
 
 @app.post('/submit_application/<posting_id>')
 def submit_application(posting_id):
-    profile_id = session.get('profile_id')
+    sessionProfile = get_session_profile()
+    profile_id = sessionProfile.get('profile_id')
     # must be logged in to apply.....
     if not profile_id:
         return redirect('/login')
-    answers = {key: request.form[key] for key in request.form.keys() if key.startswith('answers')}
+    answers = {re.search(r'\[(.*?)\]', key).group(1): request.form[key] for key in request.form.keys() if key.startswith('answers')} # regex magic
     # basic form validation
     if not posting_id or not profile_id or not answers:
         abort(400, description="Missing form data")
     success = application_repository.submit_application(profile_id, posting_id, answers)
     if not success:
         abort(500, description="Error submitting application")
-    return redirect(url_for('job_listing'))
+    return redirect('/application_portal')

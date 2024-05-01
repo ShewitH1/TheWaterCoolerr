@@ -57,6 +57,10 @@ CREATE TABLE IF NOT EXISTS education_experience (
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS posting_tags (
+    
+);
+
 CREATE TABLE IF NOT EXISTS job_posting (
     posting_id VARCHAR(24),
     company_id VARCHAR(16) NOT NULL,
@@ -68,15 +72,10 @@ CREATE TABLE IF NOT EXISTS job_posting (
     FOREIGN KEY (company_id) REFERENCES company_account(company_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS posting_tags (
-    
-);
-
 CREATE TABLE application_questions (
     id SERIAL PRIMARY KEY,
     posting_id VARCHAR(24),
     question_text TEXT NOT NULL,
-    response_text TEXT,
     FOREIGN KEY (posting_id) REFERENCES job_posting(posting_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 

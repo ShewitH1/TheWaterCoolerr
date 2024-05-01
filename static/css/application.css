@@ -23,6 +23,16 @@
     }
 }
 
+label {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: white;
+    margin-top: 1rem;
+}
+
+.question {
+    margin-bottom: 1rem;
+}
+
 h1 {
     font-family: 'IBM Plex Sans', sans-serif;
     font-weight: bold;
