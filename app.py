@@ -23,8 +23,6 @@ def get_session_profile():
         session['next'] = request.url
     else:
         session['next'] = request.url
-    if isinstance(sessionProfile, bool):
-        sessionProfile = None
     return sessionProfile
 
 @app.route('/')
@@ -501,17 +499,12 @@ def deleteEducation():
 # Posts the jobs to the job posting page
 @app.get('/job_search.html')
 def job_search():
-    posting_id = request.args.get('posting_id')
-    job_posting = job_repository.get_job_posting_for_table(posting_id)
-    if not job_posting:
-        job_posting = []
-    sessionProfile = None
-    if 'sessionProfile' in session:
-        sessionProfile = session['sessionProfile']
-        session['next'] = request.url
-    else:
-        session['next'] = request.url
-    return render_template('job_search.html', sessionProfile=sessionProfile, job_posting=job_posting)
+    job_postings = job_repository.get_job_postings()
+    print(job_postings)
+    if not job_postings:
+        job_postings = []
+    sessionProfile = get_session_profile()
+    return render_template('job_search.html', sessionProfile=sessionProfile, job_postings=job_postings)
 
 # Updates a job posting
 @app.post('/update_job_posting')
