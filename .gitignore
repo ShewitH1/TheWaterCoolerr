@@ -5,3 +5,5 @@ __pycache__/
 */__pycache__/
 */__pycache__/*
 __pycache__
+static/img/users
+static/img/company

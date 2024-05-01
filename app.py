@@ -109,14 +109,14 @@ def signup():
                     profile_repository.update_profile_bio('user', user_id, user_bio)
                 if 'profile_picture' in request.files:
                     newProfile = request.files['profile_picture']
-                    user_profile = 'static/img/users/' + newProfile.filename
+                    user_profile, link = findUserFileName(newProfile)
                     newProfile.save(user_profile)
-                    profile_repository.update_profile_image('user', user_id, user_profile)
+                    profile_repository.update_profile_image('user', user_id, link)
                 if 'profile_banner' in request.files:
                     newBanner = request.files['profile_banner']
-                    user_banner = 'static/img/users/' + newBanner.filename
+                    user_banner, link = findUserFileName(newBanner)
                     newBanner.save(user_banner)
-                    profile_repository.update_profile_banner('user', user_id, user_banner)
+                    profile_repository.update_profile_banner('user', user_id, link)
             elif request.form.get('profileType') == 'company':
                 company_id = request.form.get('id')
                 company_bio = None
@@ -127,14 +127,14 @@ def signup():
                     profile_repository.update_profile_bio('user', company_id, company_bio)
                 if 'profile_picture' in request.files:
                     newProfile = request.files['profile_picture']
-                    user_profile = 'static/img/companies/' + newProfile.filename
+                    user_profile, link = findCompanyFileName(newProfile)
                     newProfile.save(user_profile)
-                    profile_repository.update_profile_image('user', company_id, company_profile)
+                    profile_repository.update_profile_image('user', company_id, link)
                 if 'profile_banner' in request.files:
                     newBanner = request.files['profile_banner']
-                    user_banner = 'static/img/companies/' + newBanner.filename
+                    user_banner, link = findCompanyFileName(newBanner)
                     newBanner.save(user_banner)
-                    profile_repository.update_profile_banner('user', company_id, company_banner)
+                    profile_repository.update_profile_banner('user', company_id, link)
             return jsonify({'message':'extras added succesfully', 'redirect':'/login'})
         else:
             print('failed')
