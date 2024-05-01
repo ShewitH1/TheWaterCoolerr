@@ -96,6 +96,7 @@ CREATE TABLE user_application_data (
     profile_id VARCHAR(16) NOT NULL,
     posting_id VARCHAR(24) NOT NULL,
     application_status VARCHAR(32) NOT NULL,
+    seen BOOLEAN DEFAULT false
     FOREIGN KEY (profile_id) REFERENCES user_account(profile_id) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (posting_id) REFERENCES job_posting(posting_id) ON UPDATE CASCADE ON DELETE CASCADE
 );

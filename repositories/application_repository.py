@@ -15,7 +15,6 @@ def submit_application(profile_id, posting_id, answers):
     with get_pool().getconn() as conn:
         with conn.cursor() as cur:
             set_application_status(posting_id, profile_id, 'waiting')
-            #cur.execute("INSERT INTO user_application_data (profile_id, posting_id, application_status) VALUES (%s, %s, %s)", (profile_id, posting_id, 'Waiting'))
             for question_id, answer in answers.items():
                 cur.execute("INSERT INTO application_answers (profile_id, posting_id, question_id, response_text) VALUES (%s, %s, %s, %s)", (profile_id, posting_id, question_id, answer))
         conn.commit()
@@ -73,3 +72,20 @@ def set_application_status(posting_id, user_id, status):
             conn.commit()
         get_pool().putconn(conn)
     return True
+
+def get_applications_for_user(profile_id):
+    if not profile_id:
+        return None
+    with get_pool().getconn() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT DISTINCT jp.job_title, c.name, uad.application_status, aa.posting_id 
+                FROM application_answers aa 
+                INNER JOIN job_posting jp ON aa.posting_id = jp.posting_id 
+                INNER JOIN company_account c ON jp.company_id = c.company_id 
+                LEFT JOIN user_application_data uad ON aa.profile_id = uad.profile_id AND aa.posting_id = uad.posting_id
+                WHERE aa.profile_id = %s
+            """, (profile_id,))
+            applications = cur.fetchall()
+    get_pool().putconn(conn)
+    return applications

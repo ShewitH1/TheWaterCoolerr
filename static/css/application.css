@@ -32,7 +32,6 @@ p {
     font-family: 'IBM Plex Sans Condensed', sans-serif;
 }
 a {
-    font-family: 'IBM Plex Sans', sans-serif;
     text-decoration: none;
     color: var(--blue-color);
     font-weight: bold;

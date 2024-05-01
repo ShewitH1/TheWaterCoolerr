@@ -1,5 +1,7 @@
 {% extends '_layout.html' %}
 
+{% block title %}Dashboard{% endblock %}
+
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/application.css') }}">
 <script src="{{ url_for('static', filename='js/application.js') }}" defer></script>
@@ -9,11 +11,14 @@
 <div class="container-fluid bg-secondary p-2" style="height: 100vh; width: 100%; overflow-x: hidden;">
     <div class="moving-container">
         <div class="container-fluid bg-secondary p-2">
-            <div class="row p-2">
-                <div class="col-md-9">
-                    <h1 class="text-light">
-                        Company Dashboard
+            <div class="row p-2 justify-content-center">
+                <div class="col-md-6">
+                    <h1 class="text-light text-center">
+                        {{name}} Company Dashboard
                     </h1>
+                </div>
+                <div class="col-md-6 text-center" style="margin: 1rem;">
+                    <button class="btn btn-primary" style="padding: 1rem; padding-left: 2rem; padding-right: 2rem;">Create New Posting</button>
                 </div>
             </div>
         </div>
