@@ -15,120 +15,116 @@
                         Company Dashboard
                     </h1>
                 </div>
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <!-- Will need to add in oninput="searchApplicants(this.value)" or something to this degree. -->
-                        <input type="text" class="form-control" placeholder="Search Applicants">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Messages & Interviews -->
-        <div class="row" style="width: 70%; margin: 0 auto;">
-            <div class="col-md-6 d-flex flex-column">
-                <div class="text-light container-fluid bg-dark p-1 px-4 rounded mb-4 h-100">
-                    <div class="mt-3"></div>
-                    <h3 class="text-light text-center">
-                        Messages
-                    </h3>
-                    <div class="applicant-message">
-                        <div class="d-flex justify-content-between">
-                            <h5>
-                                Jane Doe
-                            </h5>
-                            <span class="active-applicant">
-                                Active Applicant
-                            </span>
-                        </div>
-                        <p>
-                            Thanks!
-                        </p>
-                    </div>
-                    <hr style="width: 100%">
-                    <div class="applicant-message">
-                        <div class="d-flex justify-content-between">
-                            <h5>
-                                Griff Gatewood
-                            </h5>
-                            <span class="rejected-applicant">
-                                Rejected
-                            </span>
-                        </div>
-                        <p>
-                            What's your deal? I mean seriously, what is your deal?
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 d-flex flex-column">
-                <div class="text-light container-fluid bg-dark p-1 px-4 rounded mb-4 h-100">
-                    <div class="mt-3"></div>
-                    <h3 class="text-light text-center">
-                        Interviews
-                    </h3>
-                    <p class="text-center">
-                        You have no interviews at this time.
-                    </p>
-                    <div class="mt-3"></div>
-                </div>
             </div>
         </div>
         <!-- Applicants -->
+        {% if answers %}
+        <div class="row" style="width: 50%; margin: 0 auto;">
+            <div class="text-light container-fluid bg-dark p-1 px-4 rounded mb-4 h-100">
+                <div class="mt-4"></div>
+                <h1 style="font-weight: bold">
+                    {{users_name[0]}} {{users_name[1]}}'s Application
+                </h1>
+                {% for answer in answers %}
+                <div class="mt-4"></div>
+                <h4 class="text-light">
+                    {{ loop.index }}) {{ questions[loop.index0][2] }}
+                </h4>
+                <p>
+                    {{ answer[1] }}
+                </p>
+                <div class="mt-4"></div>
+                <div class="mt-4"></div>
+                {% endfor %}
+                <div class="mt-4">
+                    <div style="display: flex; justify-content: space-evenly;">
+                        <a class="btn btn-primary" href="{{ url_for('application_portal') }}"
+                            style="background-color: #007bff; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Back</a>
+                        <button class="btn btn-success" onclick="showConfirmation('accept')"
+                            style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Accept</button>
+                        <button class="btn btn-danger" onclick="showConfirmation('reject')"
+                            style="background-color: #f44336; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;">Reject</button>
+                    </div>
+                    <div id="confirm-button-holder"></div>
+                    <script>
+                        function showConfirmation(action) {
+                            const confirmButtonHolder = document.getElementById('confirm-button-holder');
+                            confirmButtonHolder.innerHTML = '';
+                            const confirmP = document.createElement('p');
+                            confirmP.style.marginTop = '2rem';
+                            confirmP.innerText = `Are you sure you want to `;
+                            const actionSpan = document.createElement('span');
+                            actionSpan.innerText = `${action.toUpperCase()}`;
+                            actionSpan.style.fontWeight = 'bold';
+                            confirmP.appendChild(actionSpan);
+                            const restOfText = document.createTextNode(` this applicant?\nPress the button below to confirm.`);
+                            confirmP.appendChild(restOfText);
+                            confirmP.style.textAlign = 'center';
+                            confirmButtonHolder.appendChild(confirmP);
+                            const confirmButtonDiv = document.createElement('div');
+                            confirmButtonDiv.style.display = 'flex';
+                            confirmButtonDiv.style.justifyContent = 'center';
+                            const confirmButton = document.createElement('button');
+                            confirmButton.innerText = 'Confirm';
+                            confirmButton.style.backgroundColor = '#007bff';
+                            confirmButton.classList.add('btn');
+                            confirmButton.classList.add('btn-primary');
+                            confirmButton.style.border = 'none';
+                            confirmButton.style.color = 'white';
+                            confirmButton.style.padding = '15px 32px';
+                            confirmButton.style.textAlign = 'center';
+                            confirmButton.style.textDecoration = 'none';
+                            confirmButton.style.display = 'inline-block';
+                            confirmButton.style.fontSize = '16px';
+                            confirmButton.style.cursor = 'pointer';
+                            confirmButton.onclick = () => {
+                                window.location.href = `/application_portal/{{posting_id}}/{{user_id}}/${action}`;
+                            };
+                            confirmButtonDiv.appendChild(confirmButton);
+                            confirmButtonHolder.appendChild(confirmButtonDiv);
+                        }
+                    </script>
+                </div>
+                <div class="mt-4"></div>
+            </div>
+        </div>
+        {% else %}
         <div class="row" style="width: 80%; margin: 0 auto;">
             <div class="text-light container-fluid bg-dark p-1 rounded mb-4">
                 <div class="row">
                     <div class="mt-3"></div>
                     <div class="mt-3"></div>
-                    <div class="row justify-content-center">
-                        <div class="col-md-4">
-                            <h3 class="text-light text-center application-bar application-bar-selected">
-                                Active Applicants
-                            </h3>
-                        </div>
-                        <div class="col-md-4">
-                            <h3 class="text-light text-center application-bar">
-                                Hired
-                            </h3>
-                        </div>
-                        <div class="col-md-4">
-                            <h3 class="text-light text-center application-bar">
-                                Rejected
-                            </h3>
-                        </div>
+                    <div class="row justify-content-center text-center">
+                        <h1>
+                            Active Applicants
+                        </h1>
                     </div>
                 </div>
                 <hr style="width: 100%">
                 <table class="table table-dark">
                     <thead>
                         <tr>
-                            <th scope="col" style="width: 33.33%">Applicant</th>
-                            <th scope="col" style="width: 33.33%">Position</th>
-                            <th scope="col" style="width: 33.33%">Date Applied</th>
+                            <th scope="col" style="width: 33%">Applicant</th>
+                            <th scope="col" style="width: 33%">Position</th>
+                            <th scope="col" style="width: 33%">Posting ID</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for applicant in applicants %}
                         <tr>
                             <td>
-                                <a href="">
-                                    John Smith
+                                <a href="/application_portal/{{applicant[3]}}/{{applicant[4]}}">
+                                    {{ applicant[0] }} {{ applicant[1] }}
                                 </a>
                             </td>
-                            <td>Project Lead</td>
-                            <td>4/27/24</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="">
-                                    Jane Doe
-                                </a>
-                            </td>
-                            <td>Back-End Developer, Remote</td>
-                            <td>5/3/24</td>
-                        </tr>
+                            <td>{{ applicant[2] }}</td>
+                            <td>{{ applicant[3] }}</td>
+                            {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 

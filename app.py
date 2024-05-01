@@ -578,6 +578,38 @@ def company_login():
     else:
         return render_template('login.html')
 
+@app.route('/application_portal')
+def application_portal():
+    print(session['sessionProfile'])
+    if session['sessionProfile'].get('company_id') is not None:
+        print("Current sesh ID: " + session['sessionProfile'].get('company_id'))
+        return render_template('app_dashboard_company.html', applicants=application_repository.get_applications_for_company(session['sessionProfile'].get('company_id')))
+    elif session['sessionProfile'].get('profile_id') is not None:
+        print("Current sesh ID: " + session['sessionProfile'].get('profile_id'))
+        return render_template('app_dashboard.html')
+    else:
+        return redirect('/login')
+    
+@app.route('/application_portal/<posting_id>/<user_id>')
+def application_portal_answers(posting_id, user_id):
+    answers = application_repository.get_user_answers_for_posting(user_id, posting_id)
+    questions = application_repository.get_questions_for_application(posting_id)
+    print('questions: ')
+    print(questions)
+    print('answers: ')
+    print(answers)
+    return render_template('app_dashboard_company.html', answers=answers, questions=questions, posting_id=posting_id, user_id=user_id, users_name=application_repository.get_users_full_name(user_id))
+
+@app.route('/application_portal/<posting_id>/<user_id>/accept')
+def application_portal_accept(posting_id, user_id):
+    application_repository.set_application_status(posting_id, user_id, 'accepted')
+    return redirect('/application_portal')
+
+@app.route('/application_portal/<posting_id>/<user_id>/reject')
+def application_portal_reject(posting_id, user_id):
+    application_repository.set_application_status(posting_id, user_id, 'rejected')
+    return redirect('/application_portal')
+
 @app.route('/apply/<posting_id>')
 def apply(posting_id):
     questions = application_repository.get_questions_for_application(posting_id)

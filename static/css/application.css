@@ -68,3 +68,9 @@ a {
     color: var(--orange-color);
     font-weight: bold;
 }
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container-fluid {
+        padding: 0px !important;
+    }
+}
