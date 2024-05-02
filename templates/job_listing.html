@@ -111,7 +111,11 @@
 
             <!-- Apply button -->
             <div class="px-6 py-4 bg-gray-100 border-t border-gray-200 flex justify-end">
-                <button class="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"><a href="/apply/{{ job_posting.posting_id }}"">Apply Now</a></button>
+                {% if sessionProfile %}
+                    <button class="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"><a href="/apply/{{ job_posting.posting_id }}"">Apply Now</a></button>
+                {% else %}
+                    <button class="px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"><a href="/">Sign In To Apply</a></button>
+                {% endif %}
             </div>
         </div>
     </div>
