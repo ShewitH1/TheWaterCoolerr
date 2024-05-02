@@ -16,6 +16,8 @@
           <li><strong>Posting Date:</strong> {{ job_posting.posting_date.strftime('%d-%m-%Y %H:%M:%S') }}</li>
           <li><strong>Description:</strong> {{ job_posting.description }}</li>
           <li><strong>Salary:</strong> ${{ job_posting.salary }}</li>
+          <li><strong>Location:</strong> {{ job_posting.location }}</li>
+          <li><strong>Company:</strong> {{ job_posting.company }}</li>
           <li><strong>Company ID:</strong> {{ job_posting.company_id }}</li>
         </ul>
         <a href="/job_listing.html?job_id={{ job_posting.job_id }}" class="btn btn-primary">View Job</a>

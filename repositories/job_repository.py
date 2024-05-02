@@ -15,6 +15,8 @@ def get_job_postings():
                                 j.posting_date,
                                 j.description,
                                 j.salary,
+                                j.location,
+                                j.company,
                                 c.company_id
                         FROM 
                                 job_posting j
