@@ -198,4 +198,26 @@ update job_posting
 set company = 'Adobe'
 where company_id = 'COMP004';
 
+update job_posting
+set job_description = 'A Data Analyst is responsible for interpreting data, analyzing results, and providing insights to help businesses make informed decisions. They utilize various statistical and analytical techniques to gather, clean, and transform data into understandable formats. Data Analysts work closely with stakeholders to understand their requirements and develop reports, dashboards, and visualizations to communicate findings effectively.'
+where job_title = 'Data Analyst';
 
+update job_posting
+set job_description = 'A Marketing Manager oversees the development and execution of marketing strategies to promote products or services and drive business growth. They lead a team of marketing professionals and collaborate with other departments to achieve marketing objectives. Marketing Managers analyze market trends, consumer behavior, and competitor activities to identify opportunities and develop targeted campaigns.'
+where job_title = 'Marketing Manager';
+
+update job_posting
+set job_description = 'A Graphic Designer is responsible for creating visual concepts, designs, and layouts for various media, including print, digital, and multimedia platforms. They work closely with clients or stakeholders to understand their requirements and effectively communicate messages through visual elements. Graphic Designers use software tools and artistic skills to develop compelling designs that align with brand guidelines and project objectives.'
+where job_title = 'Graphic Designer';
+
+update job_posting
+set job_description = 'A Business Development Manager is responsible for identifying and pursuing new business opportunities to drive revenue growth and expand the company''s customer base. They develop and implement strategies to build relationships with potential clients, partners, and stakeholders. Business Development Managers work closely with sales, marketing, and product teams to achieve business objectives and maximize profitability.'
+where job_title = 'Business Development Manager';
+
+update job_posting
+set job_description = 'A Software Engineer designs, develops, tests, and maintains software applications or systems to meet business needs and technical requirements. They use programming languages, frameworks, and tools to build scalable, reliable, and efficient software solutions. Software Engineers collaborate with cross-functional teams to understand requirements, design architectures, and deliver high-quality code.'
+where job_title = 'Software Engineer';
+
+update job_posting
+set job_description = 'A Product Manager plays a crucial role in the development and success of a product throughout its lifecycle. They are responsible for defining the product vision, strategy, and roadmap, as well as overseeing its execution. Product Managers collaborate with cross-functional teams, including engineering, design, marketing, and sales, to deliver innovative and customer-centric solutions that meet business objectives.'
+where job_title = 'Product Manager';
