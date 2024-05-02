@@ -6,13 +6,13 @@
 <div class="container mx-auto py-8">
     <div style="border-radius: 0.5rem; border: 1px solid #ccc; background-color: #333; color: white; padding: 20px; margin-top: 20px;" class="rounded-lg overflow-hidden shadow-md moving-container">
         <div class="p-6">
-            <h2 class="text-3xl font-bold mb-4">Job Title {{ job_posting.job_title }}</h2>
-            <p class="text-lg mb-4">Posted ID - {{ job_posting.posting_id }}</p>
-            <p class="text-lg mb-4">Company ID - {{ job_posting.company_id }}</p>
+            <h2 class="text-3xl font-bold mb-4">{{ job_posting.job_title }}</h2>
+            <p class="text-lg mb-4">Posting ID: {{ job_posting.posting_id }}</p>
+            <p class="text-lg mb-4">Company ID: {{ job_posting.company_id }}</p>
             <p class="text-lg mb-4">Location: {{ job_posting.location }}</p>
             <p class="text-lg mb-4">Company: {{ job_posting.company }}</p>
             <p class="text-lg mb-4">Posted Date: {{ job_posting.posting_date }}</p>
-            <p class="text-lg mb-4">Salary: {{job_posting.salary}}</p>
+            <p class="text-lg mb-4">Salary: {{ job_posting.salary }}</p>
             
         </div>
 
