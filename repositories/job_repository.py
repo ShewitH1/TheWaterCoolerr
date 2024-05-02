@@ -18,9 +18,12 @@ def indi_job_posting():
                                         j.company,
                                         j.posting_date,
                                         j.salary,
+                                        j.job_description
                                 FROM 
                                         job_posting j
-                                Join company_account c on j.company_id = c.company_id ''')
+                                Join company_account c on j.company_id = c.company_id 
+                                ;
+                                ''')
                 return cursor.fetchall()
     except Exception as e:
         print(e)
