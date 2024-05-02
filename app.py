@@ -626,6 +626,9 @@ def apply(posting_id):
     if (sessionProfile.get('profile_id') == None):
         return redirect('/application_portal')
     questions = application_repository.get_questions_for_application(posting_id)
+    # if questions is empty or null, then redirect to the application portal
+    if not questions:
+        return redirect('/application_portal')
     return render_template('application.html', questions=questions, posting_id=posting_id, sessionProfile=sessionProfile)
 
 @app.route('/create_application')
