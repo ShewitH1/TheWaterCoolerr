@@ -124,17 +124,17 @@ def signup():
                 company_banner = None
                 if 'profile_bio' in request.form:
                     user_bio = request.form.get('profile_bio')
-                    profile_repository.update_profile_bio('user', company_id, company_bio)
+                    profile_repository.update_profile_bio('company', company_id, company_bio)
                 if 'profile_picture' in request.files:
                     newProfile = request.files['profile_picture']
-                    user_profile, link = findCompanyFileName(newProfile)
-                    newProfile.save(user_profile)
-                    profile_repository.update_profile_image('user', company_id, link)
+                    company_profile, link = findCompanyFileName(newProfile)
+                    newProfile.save(company_profile)
+                    profile_repository.update_profile_image('company', company_id, link)
                 if 'profile_banner' in request.files:
                     newBanner = request.files['profile_banner']
-                    user_banner, link = findCompanyFileName(newBanner)
-                    newBanner.save(user_banner)
-                    profile_repository.update_profile_banner('user', company_id, link)
+                    company_banner, link = findCompanyFileName(newBanner)
+                    newBanner.save(company_banner)
+                    profile_repository.update_profile_banner('company', company_id, link)
             return jsonify({'message':'extras added succesfully', 'redirect':'/login'})
         else:
             print('failed')

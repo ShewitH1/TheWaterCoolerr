@@ -523,11 +523,11 @@ if (profileType == "user")
                     </div>
                     <div class="row my-2">
                         <div class="col-6">
-                            <label for="startDate" class="field-label">Position Start Date:</label>
+                            <label for="startDate" class="field-label">Start Date:</label>
                             <input type="date" class="form-control" id="startDate" name="startDate" max=${formattedDate} min="1940-00-00">
                         </div>
                         <div class="col-6">
-                            <label for="endDate" class="field-label">Position End Date (if applicable):</label>
+                            <label for="endDate" class="field-label">End Date (if applicable):</label>
                             <input type="date" class="form-control" id="endDate" name="endDate" max=${formattedDate} min="1940-00-00">
                         </div>
                     </div>
