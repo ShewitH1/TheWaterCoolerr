@@ -499,12 +499,17 @@ def deleteEducation():
 # Posts the jobs to the job posting page
 @app.get('/job_search.html')
 def job_search():
+    found_jobs = []
     job_postings = job_repository.get_job_postings()
-    print(job_postings)
-    if not job_postings:
-        job_postings = []
+    job_title = request.args.get('job_title', '')
+    location = request.args.get('location', '')
+    company = request.args.get('company', '')
+
+    if any([job_title, location, company]):  
+        job_postings = job_repository.search_jobs(job_title, location, company)
+        
     sessionProfile = get_session_profile()
-    return render_template('job_search.html', sessionProfile=sessionProfile, job_postings=job_postings)
+    return render_template('job_search.html',sessionProfile=sessionProfile, job_postings=job_postings)
 
 # Updates a job posting
 @app.post('/update_job_posting')

@@ -18,7 +18,9 @@ def indi_job_posting(job_id):
                                         j.company,
                                         j.posting_date,
                                         j.salary,
-                                        j.job_description
+                                        j.job_description,
+                                        responsibilities,
+                                        requirements
                                 FROM 
                                         job_posting j
                                 JOIN company_account c on j.company_id = c.company_id 
@@ -118,38 +120,29 @@ def update_job_posting(posting_id, job_title, posting_date, description, salary,
     finally:
         if conn is not None:
             pool.putconn(conn)
-
-def search_job_posting(job_title, posting_date, description, salary, company_id):
-    conn = None
+            
+def search_jobs(job_title, location, company):
     pool = get_pool()
-    try:
-        with pool.connection() as conn:
-            with conn.cursor(row_factory=dict_row) as cursor:
-                cursor.execute('''
-                        SELECT
-                                j.job_title,
-                                j.posting_date,
-                                j.description,
-                                j.salary,
-                                c.company_id
-                        FROM 
-                                job_posting j
-                        Join company_account c on j.company_id = c.company_id 
-                        WHERE 
-                                j.job_title = %s AND
-                                j.posting_date = %s AND
-                                j.description = %s AND
-                                j.salary = %s AND
-                                j.company_id = %s
-                            ;
-                                ''', [job_title, posting_date, description, salary, company_id]) 
-                return cursor.fetchall()
-    except Exception as e:
-        print(e)
-        return False
-    finally:
-        if conn is not None:
-            pool.putconn(conn)
+    with pool.connection() as conn:
+        with conn.cursor(row_factory=dict_row) as cursor:
+            cursor.execute('''
+                            SELECT 
+                                posting_id,
+                                job_title,
+                                salary,
+                                company, 
+                                location,
+                                description,
+                                company_id,
+                                posting_date
+                            FROM 
+                                job_posting
+                            WHERE 
+                                job_title ILIKE %s
+                                AND location ILIKE %s
+                                AND company ILIKE %s
+                        ''', ('%' + job_title + '%', '%' + location + '%', '%' + company + '%'))
+            return cursor.fetchall()
 
 def delete_job_posting(posting_id):
     conn = None
