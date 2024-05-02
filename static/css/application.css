@@ -12,6 +12,11 @@
     margin: 0 auto;
 }
 
+.main-body-shorter {
+    width: 60% !important;
+    margin: 0 auto;
+}
+
 .moving-container {
     opacity: 0;
     animation: fade-in 0.5s forwards;
@@ -91,6 +96,9 @@ a {
 
 @media (max-width: 900px) {
     .main-body {
+        width: 100% !important;
+    }
+    .main-body-shorter {
         width: 100% !important;
     }
 }

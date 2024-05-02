@@ -3,7 +3,7 @@ from psycopg.rows import dict_row
 from datetime import datetime
 import uuid
 
-def indi_job_posting():
+def indi_job_posting(job_id):
     conn = None
     pool = get_pool()
     try:
@@ -21,16 +21,14 @@ def indi_job_posting():
                                         j.job_description
                                 FROM 
                                         job_posting j
-                                Join company_account c on j.company_id = c.company_id 
+                                JOIN company_account c on j.company_id = c.company_id 
+                                WHERE j.posting_id = %s
                                 ;
-                                ''')
-                return cursor.fetchall()
+                                ''', (job_id,))
+                return cursor.fetchone()
     except Exception as e:
         print(e)
         return False
-    finally:
-        if conn is not None:
-            conn.close()
 
 def get_job_postings():
     conn = None
@@ -46,7 +44,8 @@ def get_job_postings():
                                 j.salary,
                                 j.location,
                                 j.company,
-                                c.company_id
+                                c.company_id,
+                                j.posting_id
                         FROM 
                                 job_posting j
                         Join company_account c on j.company_id = c.company_id 

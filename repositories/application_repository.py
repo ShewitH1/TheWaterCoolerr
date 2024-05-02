@@ -11,12 +11,11 @@ def get_questions_for_application(posting_id):
 
 def submit_application(profile_id, posting_id, answers):
     if not profile_id:
+        print('no profile ID')
         return False
     with get_pool().getconn() as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM application_answers WHERE profile_id = %s AND posting_id = %s", (profile_id, posting_id))
-            if cur.fetchone() is not None:
-                return False
             set_application_status(posting_id, profile_id, 'waiting')
             for question_id, answer in answers.items():
                 question_id = int(question_id)
@@ -95,8 +94,11 @@ def get_applications_for_user(profile_id):
     return applications
 
 def add_questions_to_posting(posting_id, questions):
-    if not posting_id or not questions:
+    if not posting_id:
         print("Invalid input")
+        return False
+    if not questions:
+        print("No questions provided")
         return False
     with get_pool().getconn() as conn:
         with conn.cursor() as cur:
