@@ -7,6 +7,11 @@
     --orange-color: rgb(255, 200, 100);
 }
 
+.main-body {
+    width: 80% !important;
+    margin: 0 auto;
+}
+
 .moving-container {
     opacity: 0;
     animation: fade-in 0.5s forwards;
@@ -78,8 +83,14 @@ a {
     font-weight: bold;
 }
 
-@media (min-width: 576px) and (max-width: 767.98px) {
+@media (max-width: 767.98px) {
     .container-fluid {
         padding: 0px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .main-body {
+        width: 100% !important;
     }
 }
