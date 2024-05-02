@@ -3,6 +3,32 @@ from psycopg.rows import dict_row
 from datetime import datetime
 import uuid
 
+def indi_job_posting():
+    conn = None
+    pool = get_pool()
+    try:
+        with pool.connection() as conn:
+            with conn.cursor(row_factory=dict_row) as cursor:
+                cursor.execute(''' 
+                                SELECT 
+                                        j.job_title,
+                                        j.posting_id,
+                                        c.company_id,
+                                        j.location,
+                                        j.company,
+                                        j.posting_date,
+                                        j.salary,
+                                FROM 
+                                        job_posting j
+                                Join company_account c on j.company_id = c.company_id ''')
+                return cursor.fetchall()
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        if conn is not None:
+            conn.close()
+
 def get_job_postings():
     conn = None
     pool = get_pool()
@@ -133,9 +159,10 @@ def delete_job_posting(posting_id):
         with pool.connection() as conn:
             with conn.cursor() as cursor:
                 cursor.execute('''
-                        DELETE FROM job_posting
-                        WHERE posting_id = %s
-                                ''', [posting_id]) 
+                            DELETE FROM job_posting
+                            WHERE posting_id = %s
+                                    ;
+                            ''', [posting_id]) 
                 return True
     except Exception as e:
         print(e)
