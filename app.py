@@ -551,6 +551,7 @@ def job_listing():
     company = request.args.get('company')
     posting_date = request.args.get('posting_date')
     salary = request.args.get('salary')
+    job_description = request.args.get('job_description')
     job_postings = job_repository.indi_job_posting()
     return render_template('job_listing.html', sessionProfile=get_session_profile(), job_posting=job_postings)
 
