@@ -155,3 +155,47 @@ VALUES ('USER001', 'POST001', 3, 'I recently led a team to successfully launch a
 
 INSERT INTO application_answers (profile_id, posting_id, question_id, response_text)
 VALUES ('USER001', 'POST001', 4, 'I have 5 years of experience as a software engineer at a leading tech company.');
+
+alter table job_posting add location VARCHAR(50);
+
+alter table job_posting add company VARCHAR(75);
+
+alter table job_posting add job_description text;
+
+alter table job_posting add responsibilities text;
+
+alter table job_posting add requirements text;
+
+update job_posting
+set location = 'Charlotte'
+where company_id = 'COMP001';
+
+update job_posting
+set location = 'New York'
+where company_id = 'COMP002';
+
+update job_posting
+set location = 'Dallas'
+where company_id = 'COMP003';
+
+update job_posting
+set location = 'Boston'
+where company_id = 'COMP004';
+
+update job_posting
+set company = 'Red Ventures'
+where company_id = 'COMP001';
+
+update job_posting
+set company = 'Deloitte'
+where company_id = 'COMP002';
+
+update job_posting
+set company = 'Vanguard'
+where company_id = 'COMP003';
+
+update job_posting
+set company = 'Adobe'
+where company_id = 'COMP004';
+
+
