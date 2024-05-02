@@ -48,7 +48,6 @@ def login():
         password = request.form.get("password")
         print(password)
         user_record = profile_repository.get_user_by_login(username)
-        company_record = profile_repository.get_company_by_login(username)
         if user_record is not None:
             if not bcrypt.check_password_hash(user_record['hashed_password'], password):
                 return redirect('/login')
@@ -58,7 +57,8 @@ def login():
                 return redirect(session['next'])
             else:
                 return index()
-        elif company_record is not None:
+        company_record = profile_repository.get_company_by_login(username)
+        if company_record is not None:
             if not bcrypt.check_password_hash(company_record['hashed_password'], password):
                 return redirect('/login')
             session['sessionProfile'] = profile_repository.get_company_profile_by_id(company_record['company_id'])
@@ -585,10 +585,10 @@ def application_portal():
         return redirect('/login')
     if 'company_id' in sessionProfile and sessionProfile['company_id'] is not None:
         print("Current sesh ID: " + sessionProfile['company_id'])
-        return render_template('app_dashboard_company.html', sessionProfile=sessionProfile, name=sessionProfile['name'], applicants=application_repository.get_applications_for_company(sessionProfile['company_id']))
+        return render_template('app_dashboard_company.html', sessionProfile=sessionProfile, name=sessionProfile.get('name'), applicants=application_repository.get_applications_for_company(sessionProfile.get('company_id')))
     elif 'profile_id' in sessionProfile and sessionProfile['profile_id'] is not None:
         print("Current sesh ID: " + sessionProfile['profile_id'])
-        return render_template('app_dashboard.html', sessionProfile=sessionProfile, name=sessionProfile['firstname'], applications=application_repository.get_applications_for_user(sessionProfile['profile_id']))
+        return render_template('app_dashboard.html', sessionProfile=sessionProfile, name=sessionProfile.get('firstname'), applications=application_repository.get_applications_for_user(sessionProfile.get('profile_id')))
 
 @app.route('/application_portal/<posting_id>/<user_id>')
 def application_portal_answers(posting_id, user_id):

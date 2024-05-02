@@ -7,7 +7,7 @@ import random
 
 def get_user_by_login(login):
     if login is None:
-        return False
+        return None
     conn = None
     pool = get_pool()
     try:
@@ -26,14 +26,14 @@ def get_user_by_login(login):
                 return cursor.fetchone()
     except Exception as e:
         print(e)
-        return False
+        return None
     finally:
         if conn is not None:
             pool.putconn(conn)
 
 def get_user_profile_by_id(user_id):
     if user_id is None:
-        return False
+        return None
     conn = None
     pool = get_pool()
     try:
@@ -54,7 +54,7 @@ def get_user_profile_by_id(user_id):
                 return cursor.fetchone()
     except Exception as e:
         print(e)
-        return False
+        return None
     finally:
         if conn is not None:
             pool.putconn(conn)
@@ -88,7 +88,7 @@ def get_company_by_login(company_login):
 
 def get_company_profile_by_id(company_id):
     if company_id is None:
-        return False
+        return None
     conn = None
     pool = get_pool()
     try:
@@ -111,7 +111,7 @@ def get_company_profile_by_id(company_id):
                 return cursor.fetchone()
     except Exception as e:
         print(e)
-        return False
+        return None
     finally:
         if conn is not None:
             pool.putconn(conn)

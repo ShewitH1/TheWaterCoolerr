@@ -24,9 +24,6 @@ def get_job_postings():
     except Exception as e:
         print(e)
         return False
-    finally:
-        if conn is not None:
-            conn.close()  # Close the connection instead of returning it to the pool
 
 def get_job_posting_for_table(posting_id):
     if posting_id is None:
