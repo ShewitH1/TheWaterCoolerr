@@ -33,7 +33,7 @@ border-color: black;
 }
 
 .profile-edit-button {
-    position: absolute;
+    position: relative;
     margin-top: 1%;
     margin-left: 90%;
     width: 100px;
