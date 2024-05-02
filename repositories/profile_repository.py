@@ -458,6 +458,8 @@ def update_about_img(profile_id=None, about_img=None, id=0):
     finally:
         if conn is not None:
             pool.putconn(conn)
+
+            
 # Logic Methods
 
 def check_id_taken(new_id):
