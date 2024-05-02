@@ -6,27 +6,89 @@
 <div class="container">
   <h1 class="display-4 font-weight-bold text-center">Job Search Results</h1>
 
-  {% if job_postings %}
-  {% for job_posting in job_postings %}
-  <div class="mt-4">
-    <div class="card border-secondary rounded-lg">
-      <div class="card-body">
-        <h2 class="card-title h4 font-weight-bold">{{ job_posting.job_title }}</h2>
-        <ul class="list-unstyled">
-          <li><strong>Posting Date:</strong> {{ job_posting.posting_date.strftime('%d-%m-%Y %H:%M:%S') }}</li>
-          <li><strong>Description:</strong> {{ job_posting.description }}</li>
-          <li><strong>Salary:</strong> ${{ job_posting.salary }}</li>
-          <li><strong>Location:</strong> {{ job_posting.location }}</li>
-          <li><strong>Company:</strong> {{ job_posting.company }} </li>
-          <li><strong>Company ID:</strong> {{ job_posting.company_id }}</li>
-        </ul>
-        <a href="/job_listing.html?job_id={{ job_posting.posting_id }}" class="btn btn-primary">View Job</a>
-      </div>
-    </div>
+  <style>
+    .search {
+      text-align: center;
+      margin-top: 2rem;
+    }
+  
+    .search h2 {
+      font-size: 24px;
+      margin-bottom: 1rem;
+    }
+  
+    .search form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    .search input[type="text"] {
+      padding: 10px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  
+    .search button {
+      background-color: #ff6600;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  
+    .search button:hover {
+      background-color: #ff3300;
+    }
+    
+    /* Make the job postings list scrollable */
+    .job-postings-container {
+      max-height: 600px; /* Adjust the height as needed */
+      overflow-y: auto;
+    }
+  </style>
+
+  <section class="search"> 
+    <h2>Find Your Dream Job</h2> 
+    <form action="/job_search.html" method="get"> 
+        <input type="text" name="job_title" 
+            placeholder="Job Title"> 
+        <input type="text" name="location" 
+            placeholder="Location"> 
+        <input type="text" name="company" 
+            placeholder="Company"> 
+        <button type="submit"> 
+            Search 
+        </button> 
+    </form> 
+  </section>
+
+  <div class="job-postings-container">
+    {% if job_postings %}
+      {% for job_posting in job_postings %}
+        <div class="mt-4">
+          <div class="card border-secondary rounded-lg">
+            <div class="card-body">
+              <h2 class="card-title h4 font-weight-bold">{{ job_posting.job_title }}</h2>
+              <ul class="list-unstyled">
+                <li><strong>Posting Date:</strong> {{ job_posting.posting_date.strftime('%d-%m-%Y %H:%M:%S') }}</li>
+                <li><strong>Description:</strong> {{ job_posting.description }}</li>
+                <li><strong>Salary:</strong> ${{ job_posting.salary }}</li>
+                <li><strong>Location:</strong> {{ job_posting.location }}</li>
+                <li><strong>Company:</strong> {{ job_posting.company }} </li>
+                <li><strong>Company ID:</strong> {{ job_posting.company_id }}</li>
+              </ul>
+              <a href="/job_listing.html?job_id={{ job_posting.posting_id }}" class="btn btn-primary">View Job</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No job posting found.</p>
+    {% endif %}
   </div>
-  {% endfor %}
-  {% else %}
-  <p>No job posting found.</p>
-  {% endif %}
 </div>
 {% endblock %}

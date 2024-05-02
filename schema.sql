@@ -221,3 +221,35 @@ where job_title = 'Software Engineer';
 update job_posting
 set job_description = 'A Product Manager plays a crucial role in the development and success of a product throughout its lifecycle. They are responsible for defining the product vision, strategy, and roadmap, as well as overseeing its execution. Product Managers collaborate with cross-functional teams, including engineering, design, marketing, and sales, to deliver innovative and customer-centric solutions that meet business objectives.'
 where job_title = 'Product Manager';
+
+-- additional information for the job listing page
+
+UPDATE job_posting
+SET responsibilities = 'Develop high-quality software solutions that meet customer needs and business objectives. Collaborate with team members to design, develop, and implement software features and enhancements. Participate in code reviews to ensure code quality and maintainability. Stay up-to-date with the latest technologies and best practices in software development.',
+    requirements = 'Bachelor''s degree in Computer Science or related field. 3+ years of experience in software development, preferably in a fast-paced environment. Proficiency in Java, Python, or other programming languages. Strong problem-solving skills and attention to detail. Excellent communication and teamwork abilities.'
+WHERE company_id = 'COMP001';
+
+UPDATE job_posting
+SET responsibilities = 'Define product vision, strategy, and roadmap based on market research and customer feedback. Prioritize features and define product requirements. Collaborate with engineering, design, and marketing teams to deliver high-quality products on time. Monitor and analyze product performance metrics. Iterate on product features and functionality based on user feedback and market trends.',
+    requirements = 'Bachelor''s degree in Business, Computer Science, or related field. 5+ years of experience in product management or related roles. Proven track record of leading successful product launches. Strong analytical and problem-solving skills. Excellent communication and leadership abilities.'
+WHERE company_id = 'COMP001';
+
+UPDATE job_posting
+SET responsibilities = 'Identify and evaluate potential partnership opportunities that align with business objectives. Develop and maintain relationships with key partners and stakeholders. Negotiate partnership agreements and contracts. Track and report on the performance of partnerships and initiatives. Collaborate with internal teams to ensure alignment and support for partnership activities.',
+    requirements = 'Bachelor''s degree in Business Administration, Marketing, or related field. 5+ years of experience in business development, partnership management, or related roles. Proven track record of identifying and closing partnership deals. Strong negotiation and relationship-building skills. Excellent communication and presentation abilities.'
+WHERE company_id = 'COMP002';
+
+UPDATE job_posting
+SET responsibilities = 'Design graphics, illustrations, and layouts for various marketing materials, including print and digital assets. Collaborate with the marketing team to develop creative concepts and campaigns. Ensure brand consistency and adherence to design guidelines. Incorporate feedback from stakeholders to refine designs and deliver high-quality work on time.',
+    requirements = 'Bachelor''s degree in Graphic Design, Fine Arts, or related field. 3+ years of experience in graphic design, preferably in a marketing or advertising agency. Proficiency in Adobe Creative Suite (Photoshop, Illustrator, InDesign). Strong portfolio showcasing creative and innovative design solutions.'
+WHERE company_id = 'COMP004';
+
+UPDATE job_posting
+SET responsibilities = 'Develop and execute strategic marketing plans to achieve business objectives. Lead cross-functional teams to create and implement integrated marketing campaigns. Analyze market trends and customer insights to identify opportunities for growth. Measure and report on the performance of marketing campaigns and initiatives.',
+    requirements = 'Bachelor''s degree in Marketing, Business Administration, or related field. 5+ years of experience in marketing, preferably in a leadership role. Proven track record of developing and implementing successful marketing campaigns. Strong analytical and project management skills. Excellent communication and leadership abilities.'
+WHERE company_id = 'COMP003';
+
+UPDATE job_posting
+SET responsibilities = 'Analyze and interpret large datasets to extract valuable insights and trends. Generate reports and presentations to communicate findings to stakeholders. Collaborate with business units to understand data requirements and provide analytical support. Stay updated with industry trends and best practices in data analysis and visualization.',
+    requirements = 'Bachelor''s degree in Statistics, Mathematics, Economics, or related field. 3+ years of experience in data analysis or related fields. Proficiency in SQL and data visualization tools such as Tableau or Power BI. Strong analytical and problem-solving skills. Excellent communication and presentation abilities.'
+WHERE company_id = 'COMP002';
