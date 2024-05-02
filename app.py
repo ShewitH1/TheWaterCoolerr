@@ -544,16 +544,8 @@ def search_job_posting_route():
 
 @app.get('/job_listing.html')
 def job_listing():
-    job_title = request.args.get('job_title')
-    posting_id = request.args.get('posting_id')
-    company_id = request.args.get('company_id')
-    location = request.args.get('location')
-    company = request.args.get('company')
-    posting_date = request.args.get('posting_date')
-    salary = request.args.get('salary')
-    job_description = request.args.get('job_description')
-    job_postings = job_repository.indi_job_posting()
-    return render_template('job_listing.html', sessionProfile=get_session_profile(), job_posting=job_postings)
+    job_posting = job_repository.indi_job_posting(request.args.get('job_id'))
+    return render_template('job_listing.html', sessionProfile=get_session_profile(), job_posting=job_posting)
 
 @app.get('/list/<int:posting_id>')
 def get_joblist(posting_id):
