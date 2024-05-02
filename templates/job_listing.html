@@ -1,9 +1,8 @@
 {% extends '_layout.html' %}
 
-{% block content %}
+{% block head %}
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style2.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
 {% endblock %}
 
 {% block body %}
@@ -23,8 +22,9 @@
             </div>
             <!-- Job Information section -->
             <div id="infoSection" class="px-6 py-4 bg-gray-50 border-b border-gray-200">
-                <div class="flex items-center justify-between mb-4">
+                <div class="flex flex-col items-center justify-between mb-4">
                     <h2 class="text-2xl font-semibold text-gray-800">{{job_posting.job_title}}</h2>
+                    <div class="mb-4"></div>
                     {% if job_posting.company_id == 'COMP002' or job_posting.company_id == 'COMP002' %}
                         <img src="https://upload.wikimedia.org/wikipedia/commons/1/15/Deloitte_Logo.png" alt="Deloitte Logo" class="h-10">
                     {% elif job_posting.company_id == 'COMP001' %}
@@ -37,60 +37,62 @@
                         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Wells_Fargo_Logo_%282020%29.svg/800px-Wells_Fargo_Logo_%282020%29.svg.png" alt="Well Fargo Logo" class="h-10">
                     {% endif %}
                 </div>
-                <div class="flex flex-wrap text-gray-600 mb-4">
-                    <div class="flex items-center mr-6 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p>Posted ID: {{job_posting.posting_id}}</p>
-                    </div>
-                    <div class="flex items-center mr-6 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p>Company ID: {{job_posting.company_id}}</p>
-                    </div>
-                    <div class="flex items-center mr-6 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p>Location: {{job_posting.location}}</p>
-                    </div>
-                    <div class="flex items-center text-gray-600 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p>Company: {{job_posting.company}}</p>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p>Posted Date: January 1, 2024</p>
-                    </div>
-                    <div class="flex items-center text-gray-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        <p>Salary: ${{job_posting.salary}}</p>
+                <div class="items">
+                    <div class="flex flex-wrap text-gray-600 mb-4">
+                        <div class="flex items-center mr-6 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>Posted ID: {{job_posting.posting_id}}</p>
+                        </div>
+                        <div class="flex items-center mr-6 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>Company ID: {{job_posting.company_id}}</p>
+                        </div>
+                        <div class="flex items-center mr-6 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>Location: {{job_posting.location}}</p>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>Company: {{job_posting.company}}</p>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>Posted Date: January 1, 2024</p>
+                        </div>
+                        <div class="flex items-center text-gray-600 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                fill="currentColor">
+                                <path fill-rule="evenodd"
+                                    d="M10 1a9 9 0 0 1 9 9c0 4.418-3.62 8-8 8s-8-3.582-8-8a9 9 0 0 1 9-9zm0 3a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM7 11a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm5 0a1 1 0 1 0-2 0v1a1 1 0 0 0 2 0v-1zm-3 2v3a1 1 0 1 0 2 0v-3h-2z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            <p>Salary: ${{job_posting.salary}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -102,14 +104,6 @@
                 <p class="text-gray-600 font-semibold mb-2">Responsibilities</p>
                 <div class="scrollable-section max-h-40 overflow-y-scroll mb-4 shadow-md">
                     <ul class="list-disc text-gray-600 ml-6">
-                        <li>{{job_posting.requirements}}</li>
-                        <li>{{job_posting.requirements}}</li>
-                    </ul>
-                </div>
-                <p class="text-gray-600 font-semibold mb-2">Requirements</p>
-                <div class="scrollable-section max-h-40 overflow-y-scroll mb-4 shadow-md">
-                    <ul class="list-disc text-gray-600 ml-6">
-                        <li>{{job_posting.requirements}}</li>
                         <li>{{job_posting.requirements}}</li>
                     </ul>
                 </div>
