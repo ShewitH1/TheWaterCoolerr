@@ -9,7 +9,7 @@ from repositories import profile_repository, job_repository, application_reposit
 from datetime import datetime
 
 load_dotenv()
-
+# flask reg
 app = Flask(__name__)
 
 bcrypt = Bcrypt(app)
